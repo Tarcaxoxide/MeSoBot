@@ -23,7 +23,7 @@ async def Allowed(cmdd):
                 return True
     return False
 
-async def shell(_Input):
+async def shell(_Input,user):
     command=str(f'shelldir/{_Input[0].strip()}.sh')
     command.strip()
     _command=_Input[0].strip()
@@ -35,11 +35,18 @@ async def shell(_Input):
         command+='\''
         for sarg in _Input[2:]: 
             command=command+' '+sarg # we compile the command to be run
-        
+        command+=' \''
+        command+=user
+        command+='\''
+
         _Output = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True) #we run the command and get the output.
     else:
         return f'${_command} Not Allowed!' # if we were not allowed to run this command or it does not exist then we tell the user this.
-    return _Output.stdout+_Output.stderr
+    
+
+    _Output.stdout='```\n'+_Output.stdout+'\n```'
+    
+    return _Output.stdout
 
 async def cmd(author,message,instance,bot_ref):
     reply='NULL'
@@ -50,8 +57,8 @@ async def cmd(author,message,instance,bot_ref):
         for sarg in args[1:]:
             shellargs=shellargs+sarg+str(' ')
         print(f'shell {shellargs}')
-        reply = await shell(shellargs.split(' '))
-        string_log=str(f'[{reply.strip()}] -> @{author}@{instance}')
+        reply = await shell(shellargs.split(' '),f'{author}@{instance}')
+        string_log=str(f'[{message}] -> @{author}_{instance}')
         await Log(string_log)
         
     return reply
