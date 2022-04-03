@@ -30,8 +30,12 @@ async def shell(_Input):
     if await Allowed(_command): #check to see if we are allowed to run this command before we even parse what the command is.
                                     #this prevents people from executing commands that still work but are potentially a security hole.
                                     #unless your stupid enough to add those to the allowed commands in the data file.
-        for sarg in _Input[1:]: 
+        command+=' \''
+        command+=_Input[1]
+        command+='\''
+        for sarg in _Input[2:]: 
             command=command+' '+sarg # we compile the command to be run
+        
         _Output = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True) #we run the command and get the output.
     else:
         return f'${_command} Not Allowed!' # if we were not allowed to run this command or it does not exist then we tell the user this.
