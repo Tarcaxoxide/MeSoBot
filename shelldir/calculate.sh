@@ -1,14 +1,11 @@
 
 . shellLib/MathVarFunctions.sh
 
-
-
-
-Result="$(_Get "$2" "Math")"
+Varz="$(_GetVariables "$2")"
 
 if [ "!$Result" == "!" ]
 then
-    _Set "$2" "0" "Math"
+    _Set "$2" "0" "result"
 fi
 
 PreCalculate="pi=3.14159265358979323846;\
@@ -18,11 +15,11 @@ PreCalculate="pi=3.14159265358979323846;\
               day=hour*24;\
               year=day*365.25;\
               epoch=$(date +%s);\
-              result=$Result"
+              $Varz"
 
 
 Result="$(calc "$PreCalculate;$1")"
 
-_Set "$2" "$Result" "Math"
+_Set "$2" "$Result" "result"
 
 echo "$Result"

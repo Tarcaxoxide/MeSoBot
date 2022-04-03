@@ -23,6 +23,19 @@ async def Allowed(cmdd):
                 return True
     return False
 
+async def CheckArgumentCount(cmdd,cmdc):
+    with open('MeSoBot_Data.json') as Data_File:
+        Data = json.load(Data_File)
+        z=0
+        for c in Data['AllowedShellCommands']:
+            if cmdd == c:
+                if cmdc == Data['ArgumentCountShellCommands'][z]:
+                    return True
+                else:
+                    return False
+            z+=1
+    return False
+
 async def shell(_Input,user):
     command=str(f'shelldir/{_Input[0].strip()}.sh')
     command.strip()
@@ -33,13 +46,17 @@ async def shell(_Input,user):
         command+=' \''
         command+=_Input[1]
         command+='\''
-        for sarg in _Input[2:]: 
+        argzcount=0
+        for sarg in _Input[2:]:
+            argzcount+=1
             command=command+' '+sarg # we compile the command to be run
         command+=' \''
         command+=user
         command+='\''
-
-        _Output = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True) #we run the command and get the output.
+        if await CheckArgumentCount(_command,argzcount):
+            _Output = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True) #we run the command and get the output.
+        else:
+            return f'incorrect number of arguments!'
     else:
         return f'${_command} Not Allowed!' # if we were not allowed to run this command or it does not exist then we tell the user this.
     

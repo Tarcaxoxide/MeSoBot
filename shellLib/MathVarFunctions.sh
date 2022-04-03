@@ -17,6 +17,33 @@ _Get(){
     cat "MathVar/$1.$2"
 }
 
+_GetVariables(){
+    #1 = user
+    ret=""
+    for Var in MathVar/$1.*
+    do
+        name="$(echo "$Var"|cut -d'.' -f2)"
+        Result="$(_Get "$1" "$name")"
+        ret="$ret$name=$Result;"
+    done
+    echo "$ret"
+}
+
+_ListVariables(){
+    #1 = user
+    ret=""
+    for Var in $(ls MathVar/$1.*)
+    do
+        if [ "!$ret" != "!" ] ;then 
+            ret="$ret,"
+        fi
+        name="$(echo "$Var"|cut -d'.' -f2)"
+        Result="$(_Get "$1" "$name")"
+        ret="$ret$name"
+    done
+    echo "[$ret]"
+}
+
 _Delete(){
     # 1 = user
     # 2 = variable_name
