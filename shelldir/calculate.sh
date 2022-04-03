@@ -23,4 +23,3 @@ Result="$(calc "$PreCalculate;$1")"
 _Set "$2" "$Result" "result"
 
 echo "$Result"
-echo "?"
