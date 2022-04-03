@@ -16,3 +16,6 @@ create a json file 1 directory above this one.
 - AllowedShellCommands is a list of commands allowed to be executed. the commands are shell scripts in the directory `shelldir/`
 
 - The main 'executable' is `app.py`
+
+- you will need to have install Mi.py from
+`https://github.com/yupix/Mi.py`
