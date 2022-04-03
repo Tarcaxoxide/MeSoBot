@@ -7,9 +7,14 @@ create a `MeSoBot_Data.json` file.
     "token":"[INSERT TOKEN]",
     "AllowedShellCommands":[
         "date",
-        "calculate"
+        "calculate",
+        "info",
+        "fizz_buzz",
+        "set",
+        "get",
+        "delete"
     ],
-    "Channels":["local","global","main"]
+    "Channels":["global"]
 }
 ```
 
