@@ -20,7 +20,7 @@ _Get(){
 _GetVariables(){
     #1 = user
     ret=""
-    for Var in MathVar/$1.*
+    for Var in $(ls MathVar/$1.*)
     do
         name="$(echo "$Var"|cut -d'.' -f2)"
         Result="$(_Get "$1" "$name")"

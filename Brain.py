@@ -7,6 +7,8 @@ import time;
 
 BOT_NAME='@MeSoBot'
 
+
+
 async def Log(text):
     string_log=f'\n[{time.asctime( time.localtime(time.time()) )}]:{text}'
     f = open("Access.Log.txt", "a")
@@ -36,10 +38,10 @@ async def CheckArgumentCount(cmdd,cmdc):
             z+=1
     return False
 
-async def shell(_Input,user):
+async def shell(_Input,user,offset):
     command=str(f'shelldir/{_Input[0].strip()}.sh')
     command.strip()
-    _command=_Input[0].strip()
+    _command=_Input[0]
     if await Allowed(_command): #check to see if we are allowed to run this command before we even parse what the command is.
                                     #this prevents people from executing commands that still work but are potentially a security hole.
                                     #unless your stupid enough to add those to the allowed commands in the data file.
@@ -56,7 +58,7 @@ async def shell(_Input,user):
         if await CheckArgumentCount(_command,argzcount):
             _Output = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True) #we run the command and get the output.
         else:
-            return f'incorrect number of arguments!'
+            return f'{argzcount} incorrect number of arguments!'
     else:
         return f'${_command} Not Allowed!' # if we were not allowed to run this command or it does not exist then we tell the user this.
     
@@ -66,17 +68,21 @@ async def shell(_Input,user):
     return _Output.stdout
 
 async def cmd(author,message,instance,bot_ref):
+    message = message.replace("\n"," ")
+    print(message)
     reply='NULL'
     args = str(message).split(' ')
-    
-    if args[0] == BOT_NAME: #only execute if the bot is tagged at the start of the post 
-        shellargs=str('')
-        for sarg in args[1:]:
-            shellargs=shellargs+sarg+str(' ')
-        print(f'shell {shellargs}')
-        reply = await shell(shellargs.split(' '),f'{author}@{instance}')
-        string_log=str(f'[{message}] -> @{author}_{instance}')
-        await Log(string_log)
+    trival=0
+    for _arg in args:
+        trival+=1
+        if _arg == BOT_NAME: #only execute if the bot is tagged at the start of the post 
+            shellargs=str('')
+            for sarg in args[trival:]:
+                shellargs=shellargs+sarg+str(' ')
+            print(f'shell {shellargs}')
+            reply = await shell(shellargs.split(' '),f'{author}@{instance}',trival)
+            string_log=str(f'[{message}] -> @{author}_{instance}')
+            await Log(string_log)
         
     return reply
 
