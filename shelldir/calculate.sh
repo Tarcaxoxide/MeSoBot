@@ -1,19 +1,16 @@
 #!/bin/bash
 
-_Set(){
-    echo "$2" > "MathVar/$1.result"
-}
 
-_Get(){
-    cat "MathVar/$1.result"
-}
+. shellLib/MathVarFunctions.sh
 
 
-Result="$(_Get "$2")"
+
+
+Result="$(_Get "$2" "Math")"
 
 if [ "!$Result" == "!" ]
 then
-    _Set "$2" "0"
+    _Set "$2" "0" "Math"
 fi
 
 PreCalculate="pi=3.14159265358979323846;\
@@ -28,6 +25,6 @@ PreCalculate="pi=3.14159265358979323846;\
 
 Result="$(calc "$PreCalculate;$1")"
 
-_Set "$2" "$Result"
+_Set "$2" "$Result" "Math"
 
 echo "$Result"

@@ -1,0 +1,5 @@
+
+. shellLib/MathVarFunctions.sh
+
+
+echo "$*"
