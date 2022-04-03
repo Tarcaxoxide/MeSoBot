@@ -3,9 +3,16 @@ from mi import *
 
 from subprocess import PIPE, run
 import json
-
+import time;
 
 BOT_NAME='@MeSoBot'
+
+async def Log(text):
+    string_log=f'\n[{time.asctime( time.localtime(time.time()) )}]:{text}'
+    f = open("Access.Log.txt", "a")
+    f.write(string_log)
+    print(string_log)
+    f.close()
 
 async def Allowed(cmdd):
     #parse the data file to find out if we are allowed to run the command in question.
@@ -41,7 +48,7 @@ async def cmd(author,message,instance,bot_ref):
         print(f'shell {shellargs}')
         reply = await shell(shellargs.split(' '))
         string_log=str(f'[{reply.strip()}] -> @{author}@{instance}')
-        print(string_log) # log usage of the bot
+        Log(string_log)
         
     return reply
 
