@@ -1,0 +1,9 @@
+- help                      :displays this message.
+- date                      :displays the servers date/time.
+- calculate [equation]      :takes [equation] and does the math.
+- info                      :displays info about the server.
+- fizz_buzz                 :because why not.
+- set [variable] [value]    :sets [variable] to [value]
+- get [variable]            :displays value of [variable]
+- delete [variable]         :deletes [variable]
+- list                      :lists all variables that you currently have.
