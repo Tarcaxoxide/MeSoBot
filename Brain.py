@@ -29,7 +29,7 @@ async def shell(_Input):
         return f'${_command} Not Allowed!'
     return _Output.stdout+_Output.stderr
 
-async def cmd(author,message,instance):
+async def cmd(author,message,instance,bot_ref):
     reply='NULL'
     args = str(message).split(' ')
     

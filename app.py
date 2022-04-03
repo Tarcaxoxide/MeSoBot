@@ -31,7 +31,7 @@ class MyBot(commands.Bot):
         instance_name = note.author.instance.name if note.author.instance else 'local'
         username = note.author.nickname or note.author.name
 
-        message_reply = await Brain.cmd(note.author.name,note.content,instance_name)
+        message_reply = await Brain.cmd(note.author.name,note.content,instance_name,self)
         if message_reply != 'NULL':
             res = await note.reply('%s' % message_reply)
             
