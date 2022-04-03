@@ -35,12 +35,11 @@ async def cmd(author,message,instance):
     
 
     if args[0] == BOT_NAME:
-        if args[1] == 'shell':
-            shellargs=str('')
-            for sarg in args[2:]:
-                shellargs=shellargs+sarg+str(' ')
-            print(f'shell {shellargs}')
-            reply = await shell(shellargs.split(' '))
+        shellargs=str('')
+        for sarg in args[1:]:
+            shellargs=shellargs+sarg+str(' ')
+        print(f'shell {shellargs}')
+        reply = await shell(shellargs.split(' '))
 
     
     if reply != 'NULL':
