@@ -38,7 +38,7 @@ class MyBot(commands.Bot):
 
 
 if __name__ == "__main__":
-    with open('../MeSoBot_Data.json') as Data_File:
+    with open('MeSoBot_Data.json') as Data_File:
         Data = json.load(Data_File)
         uri = Data['uri']
         token = Data['token']

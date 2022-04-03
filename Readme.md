@@ -1,5 +1,5 @@
 #running the bot
-create a json file 1 directory above this one.
+create a `MeSoBot_Data.json` file.
 
 ```JSON
 {
