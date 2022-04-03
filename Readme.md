@@ -6,13 +6,25 @@ create a `MeSoBot_Data.json` file.
     "uri":"wss://[INSERT WEBSITE]/streaming",
     "token":"[INSERT TOKEN]",
     "AllowedShellCommands":[
+        "help",
         "date",
         "calculate",
         "info",
         "fizz_buzz",
         "set",
         "get",
-        "delete"
+        "delete",
+        "list"
+    ],
+    "ArgumentCountShellCommands":[
+        0,
+        1,
+        0,
+        0,
+        2,
+        1,
+        1,
+        0
     ],
     "Channels":["global"]
 }
