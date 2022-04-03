@@ -14,3 +14,5 @@ create a json file 1 directory above this one.
 ```
 
 - AllowedShellCommands is a list of commands allowed to be executed. the commands are shell scripts in the directory `shelldir/`
+
+- The main 'executable' is `app.py`
