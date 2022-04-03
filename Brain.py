@@ -48,7 +48,7 @@ async def cmd(author,message,instance,bot_ref):
         print(f'shell {shellargs}')
         reply = await shell(shellargs.split(' '))
         string_log=str(f'[{reply.strip()}] -> @{author}@{instance}')
-        Log(string_log)
+        await Log(string_log)
         
     return reply
 
