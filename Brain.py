@@ -60,7 +60,7 @@ async def shell(_Input,user,offset):
         else:
             return f'{argzcount} incorrect number of arguments!'
     else:
-        return f'${_command} Not Allowed!' # if we were not allowed to run this command or it does not exist then we tell the user this.
+        return 'NULL' 
     
 
     _Output.stdout='```\n'+_Output.stdout+'\n```'
@@ -73,8 +73,11 @@ async def cmd(author,message,instance,bot_ref):
     reply='NULL'
     args = str(message).split(' ')
     trival=0
+    Mentions=""
     for _arg in args:
         trival+=1
+        if "@" in str(_arg):
+            Mentions = Mentions+" "+str(_arg)
         if _arg == BOT_NAME: #only execute if the bot is tagged at the start of the post 
             shellargs=str('')
             for sarg in args[trival:]:
@@ -83,6 +86,8 @@ async def cmd(author,message,instance,bot_ref):
             reply = await shell(shellargs.split(' '),f'{author}@{instance}',trival)
             string_log=str(f'[{message}] -> @{author}_{instance}')
             await Log(string_log)
-        
+            if reply != 'NULL':
+                reply=str(reply)+str("\n")+Mentions
+    
     return reply
 
