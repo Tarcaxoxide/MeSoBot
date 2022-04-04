@@ -68,7 +68,7 @@ async def shell(_Input,user,offset):
     return _Output.stdout
 
 async def cmd(author,message,instance,bot_ref):
-    message = message.replace("\n"," ")
+    message = str(message).replace("\n"," ")
     print(message)
     reply='NULL'
     args = str(message).split(' ')
