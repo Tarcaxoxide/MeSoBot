@@ -85,8 +85,8 @@ async def cmd(author,message,instance,bot_ref):
             print(f'shell {shellargs}')
             reply = await shell(shellargs.split(' '),f'{author}@{instance}',trival)
             string_log=str(f'[{message}] -> @{author}_{instance}')
-            await Log(string_log)
             if reply != 'NULL':
+                await Log(string_log)
                 reply=str(reply)+str("\n")+Mentions
     
     return reply
