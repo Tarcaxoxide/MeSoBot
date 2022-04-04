@@ -31,6 +31,8 @@ async def CheckArgumentCount(cmdd,cmdc):
         z=0
         for c in Data['AllowedShellCommands']:
             if cmdd == c:
+                if Data['ArgumentCountShellCommands'][z] == -1:
+                    return True
                 if cmdc == Data['ArgumentCountShellCommands'][z]:
                     return True
                 else:
