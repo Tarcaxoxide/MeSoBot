@@ -34,6 +34,7 @@ class MyBot(commands.Bot):
         message_reply = await Brain.cmd(note.author.name,note.content,instance_name,self)
         if message_reply != 'NULL':
             res = await note.reply('%s' % message_reply)
+            print(res)
             
 
 
