@@ -1,4 +1,4 @@
-. shellLib/all.sh
+
 
 Result="$(_Get "$2" "$1")"
 

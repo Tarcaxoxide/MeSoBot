@@ -74,11 +74,9 @@ async def cmd(author,message,instance,bot_ref):
     reply='NULL'
     args = str(message).split(' ')
     trival=0
-    Mentions=""
     for _arg in args:
         trival+=1
-        if "@" in str(_arg):
-            Mentions = Mentions+" "+str(_arg)
+        
         if _arg == BOT_NAME: #only execute if the bot is tagged at the start of the post 
             shellargs=str('')
             for sarg in args[trival:]:
@@ -88,7 +86,5 @@ async def cmd(author,message,instance,bot_ref):
             string_log=str(f'[{message}] -> @{author}_{instance}')
             if reply != 'NULL':
                 await Log(string_log)
-                reply=str(reply)+str("\n")+Mentions
-    
     return reply
 

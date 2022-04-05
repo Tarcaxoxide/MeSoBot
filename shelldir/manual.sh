@@ -1,11 +1,11 @@
 . shellLib/String.sh
 
-Output="$(cat shellLib/help.txt)"
+Output="$(man "$1")"
 
 Line_Length="$(_LineLength $2)"
 Post_Length="$(_PostLength $2)"
 
-
+Output="$(_Between "$Output" "DESCRIPTION" "EXAMPLES" )"
 
 Output="$(_Trim "$Output" "$Post_Length")"
 

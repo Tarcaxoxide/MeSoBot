@@ -1,3 +1,4 @@
+. shellLib/MathVarFunctions.sh
 _Trim(){
     Input="$1"
     MaxSize="$2"
@@ -46,14 +47,49 @@ _AddNewLines(){
     count='0'
     for word in $Input
     do
-        count="$(calc "$count+$(echo "$word"|wc --chars)")"
-        Output="$Output $word"
         if [ "$(calc "$count>$LineLength")" == "	1" ]
         then
-            echo "$Output"
+            echo -ne "$Output\n"
             Output=''
             count='0'
+            
+        else
+            if [ "$word" == "<^>" ]
+            then
+                echo -ne "$Output\n"
+                Output=''
+                count='0'
+            fi
         fi
+        if [ "$word" == "<^>" ]
+        then
+            continue
+        fi
+        
+        count="$(calc "$count+$(echo "$word"|wc --chars)")"
+        Output="$Output $word"
     done
     
+}
+
+_LineLength(){
+    Line_Length="$(_Get $1 "line_length")"
+
+    if [ "$Line_Length" == "0" ]
+    then
+        Line_Length="50"
+        _Set "$1" "50" "line_length"
+    fi
+    echo -n "$Line_Length"
+}
+
+_PostLength(){
+    Post_Length="$(_Get $1 "post_length")"
+
+    if [ "$Post_Length" == "0" ]
+    then
+        Post_Length="2900"
+        _Set "$1" "2900" "post_length"
+    fi
+    echo -n "$Post_Length"
 }

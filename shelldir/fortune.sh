@@ -1,3 +1,3 @@
-. shellLib/all.sh
+
 
 fortune

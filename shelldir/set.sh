@@ -1,4 +1,4 @@
-. shellLib/all.sh
+. shellLib/MathVarFunctions.sh
 
 _Set "$3" "$2" "$1"
 
