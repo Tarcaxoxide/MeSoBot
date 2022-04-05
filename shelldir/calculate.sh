@@ -1,5 +1,4 @@
-
-. shellLib/MathVarFunctions.sh
+. shellLib/all.sh
 
 Varz="$(_GetVariables "$2")"
 

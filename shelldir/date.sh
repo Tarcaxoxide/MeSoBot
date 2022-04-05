@@ -1,3 +1,3 @@
-#!/bin/env bash
+. shellLib/all.sh
 
 date

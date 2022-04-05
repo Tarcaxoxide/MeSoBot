@@ -1,4 +1,4 @@
-
+. shellLib/all.sh
 
 for I in `seq 0 100`
 do

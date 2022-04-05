@@ -1,5 +1,4 @@
-
-. shellLib/MathVarFunctions.sh
+. shellLib/all.sh
 
 
 _Delete "$2" "$1"

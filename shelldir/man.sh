@@ -1,6 +1,4 @@
-
-. shellLib/String.sh
-. shellLib/MathVarFunctions.sh
+. shellLib/all.sh
 
 Output="$(man "$1")"
 
@@ -14,7 +12,7 @@ Line_Length="$(_Get $2 "line_length")"
 if [ "$Line_Length" == "0" ]
 then
     Line_Length="50"
-    _Set "$2" "line_length" "50"
+    _Set "$2" "50" "line_length"
 fi
 
 
