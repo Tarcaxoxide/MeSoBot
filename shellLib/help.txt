@@ -8,6 +8,8 @@
 <^> get [variable]            :displays value of [variable].
 <^> delete [variable]         :deletes [variable].
 <^> list                      :lists all variables that you currently have.
+<^> github                    :replies with github link.
+<^> search                    :searches the web using duckduckgo and replies with 5 results.
 
 <^> #variables#
 <^> result      :contains the results of the previews calculation.
