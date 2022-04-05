@@ -5,10 +5,6 @@ from subprocess import PIPE, run
 import json
 import time;
 
-BOT_NAME='@MeSoBot'
-
-
-
 async def Log(text):
     string_log=f'\n[{time.asctime( time.localtime(time.time()) )}]:{text}'
     f = open("Access.Log.txt", "a")
@@ -64,27 +60,48 @@ async def shell(_Input,user,offset):
     else:
         return 'NULL' 
     
+    if f'!{_Output.stdout}' != '!':
+        _Output.stdout='```\n'+_Output.stdout+'\n```'
+        return _Output.stdout
+    return 'NULL'
 
-    _Output.stdout='```\n'+_Output.stdout+'\n```'
-    
-    return _Output.stdout
+async def BotMentioned(message,BotName):
+    message = str(message).replace("\n"," ")
+    args = str(message).split(' ')
+    trival=0
+    for _arg in args:
+        trival+=1
+        if _arg == f'@{BotName}':
+            return trival
+    return -1
+
+
 
 async def cmd(author,message,instance,bot_ref):
     message = str(message).replace("\n"," ")
     reply='NULL'
     args = str(message).split(' ')
-    trival=0
-    for _arg in args:
-        trival+=1
+    trival= await BotMentioned(message,'MeSoBot')
         
-        if _arg == BOT_NAME: #only execute if the bot is tagged at the start of the post 
-            shellargs=str('')
-            for sarg in args[trival:]:
-                shellargs=shellargs+sarg+str(' ')
-            print(f'shell {shellargs}')
-            reply = await shell(shellargs.split(' '),f'{author}@{instance}',trival)
-            string_log=str(f'[{message}] -> @{author}_{instance}')
-            if reply != 'NULL':
-                await Log(string_log)
+    if trival > 0: #only execute if the bot is tagged at the start of the post 
+        shellargs=str('')
+        for sarg in args[trival:]:
+            shellargs=shellargs+sarg+str(' ')
+        print(f'shell {shellargs}')
+        reply = await shell(shellargs.split(' '),f'{author}@{instance}',trival)
+        string_log=str(f'[{message}] -> @{author}_{instance}')
+        if reply != 'NULL':
+            await Log(string_log)
     return reply
 
+async def Messaged(bot_ref,note: Note):
+    instance_name = note.author.instance.name if note.author.instance else 'local'
+    username = note.author.nickname or note.author.name
+    trival= await BotMentioned(note.content,'MeSoBot')
+    if note.author.name != "MeSoBot":
+        if trival >= 1:
+            message_reply = await cmd(note.author.name,note.content,instance_name,bot_ref)
+            if message_reply != 'NULL':
+                await note.reply('%s' % message_reply)
+            else:
+                await note.reply('?')

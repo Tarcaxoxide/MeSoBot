@@ -28,14 +28,7 @@ class MyBot(commands.Bot):
 
     async def on_message(self, note: Note):
         importlib.reload(Brain)
-        instance_name = note.author.instance.name if note.author.instance else 'local'
-        username = note.author.nickname or note.author.name
-
-        message_reply = await Brain.cmd(note.author.name,note.content,instance_name,self)
-        if message_reply != 'NULL':
-            await note.reply('%s' % message_reply)
-            
-
+        await Brain.Messaged(self,note)
 
 if __name__ == "__main__":
     with open('MeSoBot_Data.json') as Data_File:
