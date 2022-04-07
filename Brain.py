@@ -73,6 +73,8 @@ async def BotMentioned(message,BotName):
         trival+=1
         if _arg == f'@{BotName}':
             return trival
+        if _arg == f'@{BotName}@www.loganjohndarylgraham.xyz':
+            return trival
     return -1
 
 
@@ -82,7 +84,12 @@ async def cmd(author,message,instance,bot_ref):
     reply='NULL'
     args = str(message).split(' ')
     trival= await BotMentioned(message,'MeSoBot')
-        
+    mentions=''
+
+    for msgz in args:
+        if msgz[0] == '@':
+            mentions=f'{mentions} {msgz}'
+
     if trival > 0: #only execute if the bot is tagged at the start of the post 
         shellargs=str('')
         for sarg in args[trival:]:
@@ -92,6 +99,8 @@ async def cmd(author,message,instance,bot_ref):
         string_log=str(f'[{message}] -> @{author}_{instance}')
         if reply != 'NULL':
             await Log(string_log)
+        
+        reply=f'{mentions}\n{reply}'
     return reply
 
 async def Messaged(bot_ref,note: Note):

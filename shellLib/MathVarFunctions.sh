@@ -47,7 +47,6 @@ _ListVariables(){
 _Delete(){
     # 1 = user
     # 2 = variable_name
-    
     rm -f "MathVar/$1.$2"
 }
 
