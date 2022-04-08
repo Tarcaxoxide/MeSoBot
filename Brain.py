@@ -111,4 +111,4 @@ async def Messaged(bot_ref,note: Note):
             if message_reply != 'NULL':
                 await note.reply('%s' % message_reply)
             else:
-                await note.reply('I Do not know what this means. Try \'help\',\n later I might know how to converse but not yet.')
+                await note.reply('I Do not know what this means. Try \'help\',\n later I might know how to converse but not yet.\n@logan@www.loganjohndarylgraham.xyz this is a reminder to implement this.')
