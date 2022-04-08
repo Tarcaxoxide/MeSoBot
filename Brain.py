@@ -78,9 +78,8 @@ async def BotMentioned(message,BotName):
     return -1
 
 
-
 async def cmd(author,message,instance,bot_ref):
-    message = str(message).replace("\n"," ")
+    message = str(message).replace("\n","")
     reply='NULL'
     args = str(message).split(' ')
     trival= await BotMentioned(message,'MeSoBot')
