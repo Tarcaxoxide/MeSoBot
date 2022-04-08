@@ -79,7 +79,6 @@ async def BotMentioned(message,BotName):
 
 
 async def cmd(author,message,instance,bot_ref):
-    message = str(message).replace("\n","")
     reply='NULL'
     args = str(message).split(' ')
     trival= await BotMentioned(message,'MeSoBot')
@@ -98,18 +97,18 @@ async def cmd(author,message,instance,bot_ref):
         string_log=str(f'[{message}] -> @{author}_{instance}')
         if reply != 'NULL':
             await Log(string_log)
-        
-        reply=f'{mentions}\n{reply}'
+            reply=f'{mentions}\n{reply}'
     return reply
 
 async def Messaged(bot_ref,note: Note):
     instance_name = note.author.instance.name if note.author.instance else 'local'
     username = note.author.nickname or note.author.name
-    trival= await BotMentioned(note.content,'MeSoBot')
+    msga=str(note.content).replace("\n","")
+    trival= await BotMentioned(msga,'MeSoBot')
     if note.author.name != "MeSoBot":
         if trival >= 1:
-            message_reply = await cmd(note.author.name,note.content,instance_name,bot_ref)
+            message_reply = await cmd(note.author.name,msga,instance_name,bot_ref)
             if message_reply != 'NULL':
                 await note.reply('%s' % message_reply)
             else:
-                await note.reply('?')
+                await note.reply('I Do not know what this means. Try \'help\',\n later I might know how to converse but not yet.')
