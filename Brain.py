@@ -4,6 +4,7 @@ from mi import *
 from subprocess import PIPE, run
 import json
 import time;
+import re
 
 async def Log(text):
     string_log=f'\n[{time.asctime( time.localtime(time.time()) )}]:{text}'
@@ -71,10 +72,11 @@ async def BotMentioned(message,BotName):
     trival=0
     for _arg in args:
         trival+=1
-        if _arg == f'@{BotName}':
-            return trival
-        if _arg == f'@{BotName}@www.loganjohndarylgraham.xyz':
-            return trival
+    
+    Rez = re.search(f'@{BotName}',message)
+    if f'{Rez}' != "None":
+        return trival
+
     return -1
 
 
