@@ -7,7 +7,7 @@ int main(int argc,char** argv){
         Arguments.push_back(argv[i]);
     }
     
-    Mi::Mi_C mi(Arguments,SITE_URI,SITE_TOKEN,{"global"});
+    Mi::Mi_C mi(Arguments,SITE_URI,SITE_TOKEN,{"local"});
 
     mi.SetUp();
     mi.Run();
