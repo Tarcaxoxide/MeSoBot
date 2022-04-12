@@ -45,6 +45,7 @@ namespace Mi{
         _exec+="    async def on_message(self, note: Note):";_exec+="\n";
         _exec+="        instance_name = note.author.instance.name if note.author.instance else 'local'";_exec+="\n";
         _exec+="        username = note.author.nickname or note.author.name";_exec+="\n";
+//        _exec+="        ResultFromCPP = CPP_Function(username,instance_name,note.content)";_exec+="\n"; //<<How to implement this?
         _exec+="        if note.renote is None:";_exec+="\n";
         _exec+="            print(f'{instance_name} | {username}: {note.content}')";_exec+="\n";
         _exec+="        else:";_exec+="\n";
