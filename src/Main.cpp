@@ -107,10 +107,14 @@ namespace MiWW{
         _exec+="print(f'Connecting to socket {ADDR}...')";_exec+="\n";
         _exec+="zclient = socket.socket(socket.AF_INET,socket.SOCK_STREAM)";_exec+="\n";
         _exec+="zclient.connect(ADDR)";_exec+="\n";
+    //  Send
         _exec+="async def send(msg):";_exec+="\n";
+        _exec+="    RETURN_MESSAGE='?'";_exec+="\n";
         _exec+="    zclient.send(msg.encode('utf-8'))";_exec+="\n";
         _exec+="    ret = zclient.recv(4096)";_exec+="\n";
-        _exec+="    return ret.decode('utf-8')";_exec+="\n";
+        _exec+="    RETURN_MESSAGE=str(ret.decode('utf-8'))";_exec+="\n";
+        _exec+="    print(f'?sending?{RETURN_MESSAGE}?sending?')";_exec+="\n";
+        _exec+="    return RETURN_MESSAGE;";_exec+="\n";
     // Bot Setup
         _exec+="uri='";_exec+=uri;_exec+="'";_exec+="\n";
         _exec+="token='";_exec+=token;_exec+="'";_exec+="\n";
@@ -155,10 +159,11 @@ namespace MiWW{
         _exec+="        if str(rets).strip() != str('author_name'):";_exec+="\n";
         _exec+="            print(f'ERROR: \\'{rets}\\' not author_name');";_exec+="\n";
 
-        _exec+="        rets = await send(f'{note.content}')";_exec+="\n";//than we send the message
-        _exec+="        await note.reply(f'{rets}')";_exec+="\n";// if everything goes well than we reply
-        _exec+="        res = await self.client.note.send(f'{rets}')";_exec+="\n";
-        _exec+="        print(res.content)";_exec+="\n";
+        _exec+="        if note.author.name != 'MeSoBot':";_exec+="\n";
+        _exec+="            rs = await send(f'{note.content}')";_exec+="\n";
+        _exec+="            res = await note.reply(rs)";_exec+="\n";
+        _exec+="            print(str(res))";_exec+="\n";
+
 
 
     // execute(on the python side)
