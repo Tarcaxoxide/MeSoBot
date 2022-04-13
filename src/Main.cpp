@@ -9,7 +9,9 @@
 
 namespace pring{
     void MessageReceive(pring::Networking::Connection_st* Client){
-        
+        // this could be considered the bot bot's brain
+        // is just it's appendages which it uses to communicate
+        // with the world.
         Client->Write((char*)Client->Read());
     }
 

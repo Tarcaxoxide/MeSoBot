@@ -5,8 +5,8 @@ from mi import *
 import time
 import Credential
 time.sleep(10)
-IP=Credential.ip
-PORT=Credential.port
+ip='127.1.0.1'
+port=5400
 ADDR=(IP,PORT)
 print(f'Connecting to socket {ADDR}...')
 zclient = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -14,7 +14,7 @@ zclient.connect(ADDR)
 
 uri=Credential.uri
 token=Credential.token
-channels=Credential.channels
+channels=['local']
 
 
 MSGZ=""
@@ -44,15 +44,11 @@ class MyBot(commands.Bot):
     async def on_message(self, note: Note):
         instance_name = note.author.instance.name if note.author.instance else 'local'
         username = note.author.nickname or note.author.name
-        MSGZ = await send(note.content)
-        res = await note.reply(str(MSGZ))
-        print(f'?{MSGZ}?')
-        ##if note.renote is None:
-        ##    print(f'{instance_name} | {username}: {note.content}')
-        ##else:
-        ##    renote_name = note.renote.user.name
-        ##    print(f'{instance_name} | {username}: {note.content}\n    {renote_name}: {note.renote.content}')
 
+        if note.author.name != 'MeSoBot':
+            MSGZ = await send(note.content)
+            res = await note.reply(str(MSGZ))
+            print(f'?{MSGZ}?')
 
 if __name__ == "__main__":
     asyncio.run(MyBot().start(uri, token))
