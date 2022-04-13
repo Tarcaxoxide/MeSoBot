@@ -2,7 +2,7 @@
 NAME = MeSoBot
 CC = clang++
 
-CFLAGS = -Iinc -I/usr/include/python3.9/ -L/usr/lib/python3.9/config-3.9-x86_64-linux-gnu -lpython3.9
+CFLAGS += -Iinc -I/usr/include/python3.9/ -L/usr/lib/python3.9/config-3.9-x86_64-linux-gnu -lpython3.9
 
 
 SRCDIR := src
