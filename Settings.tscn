@@ -1,0 +1,124 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
+
+[node name="Settings" type="Popup"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="List" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Switches" type="HBoxContainer" parent="List"]
+margin_right = 1024.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Live" type="CheckButton" parent="List/Switches"]
+margin_right = 510.0
+margin_bottom = 116.0
+size_flags_horizontal = 11
+size_flags_vertical = 11
+text = "Live?"
+align = 2
+
+[node name="Federating" type="CheckButton" parent="List/Switches"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 116.0
+size_flags_horizontal = 11
+size_flags_vertical = 11
+text = "Federating?"
+align = 2
+
+[node name="Token" type="HBoxContainer" parent="List"]
+margin_top = 120.0
+margin_right = 1024.0
+margin_bottom = 237.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="List/Token"]
+margin_top = 51.0
+margin_right = 86.0
+margin_bottom = 65.0
+text = "           Token:"
+
+[node name="Value" type="LineEdit" parent="List/Token"]
+margin_left = 90.0
+margin_right = 1024.0
+margin_bottom = 117.0
+size_flags_horizontal = 3
+
+[node name="Uri" type="HBoxContainer" parent="List"]
+margin_top = 241.0
+margin_right = 1024.0
+margin_bottom = 358.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="List/Uri"]
+margin_top = 51.0
+margin_right = 87.0
+margin_bottom = 65.0
+text = "                Uri:"
+
+[node name="Value" type="LineEdit" parent="List/Uri"]
+margin_left = 91.0
+margin_right = 1024.0
+margin_bottom = 117.0
+size_flags_horizontal = 3
+
+[node name="BotName" type="HBoxContainer" parent="List"]
+margin_top = 362.0
+margin_right = 1024.0
+margin_bottom = 479.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="List/BotName"]
+margin_top = 51.0
+margin_right = 88.0
+margin_bottom = 65.0
+text = "     Bot Name:"
+
+[node name="Value" type="LineEdit" parent="List/BotName"]
+margin_left = 92.0
+margin_right = 1024.0
+margin_bottom = 117.0
+size_flags_horizontal = 3
+
+[node name="OwnerName" type="HBoxContainer" parent="List"]
+margin_top = 483.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="List/OwnerName"]
+margin_top = 51.0
+margin_right = 88.0
+margin_bottom = 65.0
+text = "Owner Name:"
+
+[node name="Value" type="LineEdit" parent="List/OwnerName"]
+margin_left = 92.0
+margin_right = 1024.0
+margin_bottom = 117.0
+size_flags_horizontal = 3

@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
+[ext_resource path="res://ApiWrapper.tscn" type="PackedScene" id=2]
+[ext_resource path="res://NewResponseDialog.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Settings.tscn" type="PackedScene" id=4]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ApiWrapper" parent="." instance=ExtResource( 2 )]
+
+[node name="IO" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InputList" type="ItemList" parent="IO"]
+margin_right = 510.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="OutputList" type="ItemList" parent="IO"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NewResponseDialog" parent="." instance=ExtResource( 3 )]
+
+[node name="Settings" parent="." instance=ExtResource( 4 )]
+visible = true
+
+[connection signal="item_selected" from="IO/OutputList" to="." method="_on_OutputList_item_selected"]
