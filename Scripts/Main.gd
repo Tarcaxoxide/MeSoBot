@@ -6,6 +6,7 @@ onready var Settings = bot.API_DATA["Settings"]
 var Responses_Path = "user://Responses.cfg"
 var config = ConfigFile.new()
 var load_response = config.load(Responses_Path)
+var SpecialCharz=[",",".",";"]
 
 func Bagify(things:Array) -> Array:
 	var Ret:Array
@@ -54,6 +55,9 @@ func brainFunc(msg:Array) -> String:
 		msz+=ms
 		if(ms != last):# add space if it's not the last element
 			msz+=" "
+	msz=msz.to_lower()
+	for Schar in SpecialCharz:
+		msz=msz.replace(Schar,"")
 	var index=-1
 	for Item in BrainBag:
 		if(Item["Element"] == msz):
@@ -62,12 +66,15 @@ func brainFunc(msg:Array) -> String:
 	if(index == -1):
 		print("adding item:",msz)
 		$IO/InputList.add_item(msz,null,false)
-		$IO/OutputList.add_item("@"+Settings["OwnerName"]+" respense needed!",null,true)
+		$IO/OutputList.add_item("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!",null,true)
 		Ret=$IO/OutputList.get_item_text($IO/OutputList.get_item_count()-1)
 		SaveResponses()
 	else:
 		Ret=$IO/OutputList.get_item_text(index)
-	return Ret
+	
+	for Schar in SpecialCharz:
+		Ret=Ret.replace(Schar,"")
+	return Ret.to_lower()
 
 
 func On_Message(txt,id):
