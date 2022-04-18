@@ -6,7 +6,7 @@ onready var Settings = bot.API_DATA["Settings"]
 var Responses_Path = "user://Responses.cfg"
 var config = ConfigFile.new()
 var load_response = config.load(Responses_Path)
-var SpecialCharz=[",",".",";"]
+var SpecialCharz=[",",".",";","!","?"]
 
 func Bagify(things:Array) -> Array:
 	var Ret:Array
