@@ -30,7 +30,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Live" type="CheckButton" parent="List/Switches"]
-margin_right = 338.0
+margin_right = 510.0
 margin_bottom = 116.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
@@ -38,11 +38,12 @@ text = "Live"
 align = 2
 
 [node name="Federating" type="CheckButton" parent="List/Switches"]
-margin_left = 342.0
-margin_right = 681.0
+margin_left = 514.0
+margin_right = 1024.0
 margin_bottom = 116.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
+pressed = true
 text = "Federating"
 align = 2
 

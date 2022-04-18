@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://ApiWrapper.tscn" type="PackedScene" id=2]
 [ext_resource path="res://NewResponseDialog.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Settings.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Console.tscn" type="PackedScene" id=5]
 
 [node name="Main" type="Control"]
 anchor_right = 1.0
@@ -22,41 +23,69 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Labels" type="HBoxContainer" parent="Main"]
+[node name="X" type="HBoxContainer" parent="Main"]
 margin_right = 1024.0
-margin_bottom = 31.0
+margin_bottom = 16.0
+
+[node name="Sensitivity" type="HSlider" parent="Main/X"]
+margin_right = 510.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 100000.0
+step = 10.0
+value = 50000.0
+
+[node name="Bias" type="HSlider" parent="Main/X"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 100000.0
+step = 10.0
+value = 50000.0
+
+[node name="PercentDisplay" type="Label" parent="Main"]
+margin_top = 20.0
+margin_right = 1024.0
+margin_bottom = 34.0
+
+[node name="Labels" type="HBoxContainer" parent="Main"]
+margin_top = 38.0
+margin_right = 1024.0
+margin_bottom = 52.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="Main/Labels"]
 margin_right = 338.0
-margin_bottom = 31.0
+margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
-text = "
-Input"
+text = "Input"
 
 [node name="Label2" type="Label" parent="Main/Labels"]
 margin_left = 342.0
 margin_right = 681.0
-margin_bottom = 31.0
+margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
-text = "
-Output"
+text = "Output"
 
 [node name="Label3" type="Label" parent="Main/Labels"]
 margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 31.0
+margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
-text = "
-Require Mention"
+text = "Require Mention"
 
 [node name="IO" type="HBoxContainer" parent="Main"]
-margin_top = 35.0
+margin_top = 56.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -67,28 +96,32 @@ __meta__ = {
 
 [node name="InputList" type="ItemList" parent="Main/IO"]
 margin_right = 338.0
-margin_bottom = 565.0
+margin_bottom = 544.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="OutputList" type="ItemList" parent="Main/IO"]
 margin_left = 342.0
 margin_right = 681.0
-margin_bottom = 565.0
+margin_bottom = 544.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RequreMentionList" type="ItemList" parent="Main/IO"]
 margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 565.0
+margin_bottom = 544.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="NewResponseDialog" parent="." instance=ExtResource( 3 )]
-visible = false
 
 [node name="Settings" parent="." instance=ExtResource( 4 )]
 
+[node name="Console" parent="." instance=ExtResource( 5 )]
+
+[connection signal="value_changed" from="Main/X/Sensitivity" to="." method="_on_Sensitivity_value_changed"]
+[connection signal="value_changed" from="Main/X/Bias" to="." method="_on_Sensitivity_value_changed"]
+[connection signal="item_selected" from="Main/IO/InputList" to="." method="_on_OutputList_item_selected"]
 [connection signal="item_selected" from="Main/IO/OutputList" to="." method="_on_OutputList_item_selected"]
 [connection signal="item_selected" from="Main/IO/RequreMentionList" to="." method="_on_OutputList_item_selected"]

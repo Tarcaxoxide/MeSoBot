@@ -4,33 +4,49 @@ onready var bot = $ApiWrapper
 onready var Settings = bot.API_DATA["Settings"]
 
 var Responses_Path = "user://Responses.cfg"
-var config = ConfigFile.new()
-var load_response = config.load(Responses_Path)
+var Responses_config = ConfigFile.new()
+var Responses_response = Responses_config.load(Responses_Path)
 var SpecialCharz=[",",".",";","!","?"]
+
+var Settings_Path = "user://Settings.cfg"
+var Settings_config = ConfigFile.new()
+var load_response = Settings_config.load(Settings_Path)
+
+
+func loadSettings():
+	var v:int = int(str(Settings_config.get_value("bars","Bias")))
+	$Main/X/Bias.value=v
+	v = int(str(Settings_config.get_value("bars","Sensitivity")))
+	$Main/X/Sensitivity.value=v
+
+func saveSettings():
+	Settings_config.set_value("bars","Bias",$Main/X/Bias.value)
+	Settings_config.set_value("bars","Sensitivity",$Main/X/Sensitivity.value)
+	Settings_config.save(Settings_Path)
 
 func Bagify(things:Array) -> Array:
 	var Ret:Array
 	var count=0
 	for item in things:
 		if typeof(item) == TYPE_STRING:
-			Ret.append({"Triggered":false,"Number":count,"Element":item})
+			Ret.append({"Triggered":false,"Similarity":0.00,"Number":count,"Element":item})
 			count+=1
 	return Ret
 
 
 func loadResponses():
 	for i in range(1,999999999999999999):
-		var re = config.get_value("In",str(i))
+		var re = Responses_config.get_value("In",str(i))
 		if re == null:
 			break
 		$Main/IO/InputList.add_item(re,null,false)
 	for i in range(1,999999999999999999):
-		var re = config.get_value("Out",str(i))
+		var re = Responses_config.get_value("Out",str(i))
 		if re == null:
 			break
 		$Main/IO/OutputList.add_item(re,null,true)
 	for i in range(1,999999999999999999):
-		var re = config.get_value("RequireMention",str(i))
+		var re = Responses_config.get_value("RequireMention",str(i))
 		if re == null:
 			break
 		$Main/IO/RequreMentionList.add_item(re,null,true)
@@ -40,23 +56,62 @@ func SaveResponses():
 	var OutBag = Bagify($Main/IO/OutputList.items)
 	var RequireBag = Bagify($Main/IO/RequreMentionList.items)
 	for item in InBag:
-		config.set_value("In",str(item["Number"]),item["Element"])
+		Responses_config.set_value("In",str(item["Number"]),item["Element"])
 	for item in OutBag:
-		config.set_value("Out",str(item["Number"]),item["Element"])
+		Responses_config.set_value("Out",str(item["Number"]),item["Element"])
 	for item in RequireBag:
-		config.set_value("RequireMention",str(item["Number"]),item["Element"])
-	config.save(Responses_Path)
+		Responses_config.set_value("RequireMention",str(item["Number"]),item["Element"])
+	Responses_config.save(Responses_Path)
 
 func _ready():
 	$Main/IO/OutputList.add_item("null",null,true)
 	$Main/IO/InputList.add_item("null",null,false)
 	$Main/IO/RequreMentionList.add_item("null",null,false)
 	loadResponses()
+	loadSettings()
+	$Main/PercentDisplay.text=str( float($Main/X/Sensitivity.value)/float(100000) )
+	$Main/PercentDisplay.text+=":"
+	$Main/PercentDisplay.text+=str( float($Main/X/Bias.value)/float(100000) )
+
+
+func ProcessesBagOfWords(Bag:Array,TargetString:String) ->Dictionary:
+	var Ret:Dictionary ={"Index":-1,"Similarity":0.00}
+	var sCount=1
+	var Count=1
+	var BestMatch:Dictionary
+	for Element in Bag:
+		var A=Element["Element"].split(" ",true)
+		var A_Bag = Bagify(A)
+		var B=TargetString.split(" ",true)
+		var B_Bag = Bagify(B)
+		var T:Dictionary
+		for B_Element in B_Bag:
+			#sCount=1
+			#Count=1
+			for A_Element in A_Bag:
+				Count+=1
+				if(A_Element["Element"] == B_Element["Element"]):
+					A_Element["Triggered"]=true
+					A_Element["Number"]=Element["Number"]
+					sCount+=1
+					T=A_Element
+			if T.has("Triggered") and T["Triggered"]:
+				var sim:float = (float($Main/X/Bias.value)/float(100000))-(float(sCount)/float(Count))
+				if !BestMatch.has('Triggered') or (BestMatch["Similarity"] < sim):
+					BestMatch=T
+					BestMatch["Similarity"]=sim
+	if BestMatch.has("Number") and BestMatch["Similarity"] >= (float($Main/X/Sensitivity.value)/float(100000)):
+		$Console.Log(str("[Y]"+str(float($Main/X/Sensitivity.value)/float(100000)),"?",BestMatch,"=",TargetString))
+		if BestMatch["Element"] == "":
+			$Console.Log(str("[N]"+str(float($Main/X/Sensitivity.value)/float(100000)),"?",BestMatch,"=",TargetString))
+			return {"Index":-1,"Similarity":0.00}
+		return {"Index":BestMatch["Number"],"Similarity":BestMatch["Similarity"]}
+	$Console.Log(str("[N]"+str(float($Main/X/Sensitivity.value)/float(100000)),"?",BestMatch,"=",TargetString))
+	return {"Index":-1,"Similarity":0.00}
 
 func brainFunc(msg:Array,Mentioned:bool) -> String:
-	if msg == [msg[0],msg[0]]:
+	if(msg == [msg[0],msg[0]]):
 		msg=[msg[0]]
-	print("?",msg)
 	var BrainBag = Bagify($Main/IO/InputList.items)
 	var Ret=""
 	var msz=""
@@ -72,14 +127,17 @@ func brainFunc(msg:Array,Mentioned:bool) -> String:
 		msz=msz.replace(Schar,"")
 	#Check
 	var index=-1
+	var Re:Dictionary=ProcessesBagOfWords(BrainBag,msz)
+	index=Re["Index"]
 	for Item in BrainBag:
 		#TODO:: Implement bag of words.
 		if(Item["Element"] == msz):
 			index=Item["Number"] #number being it's id/index
 	#Respend
+	if(index == -2):
+		return str("null")
 	if(index == -1):
-		print("adding item:",msz)
-		$Main/IO/InputList.add_item(msz,null,false)
+		$Main/IO/InputList.add_item(msz,null,true)
 		$Main/IO/OutputList.add_item("null",null,true)
 		$Main/IO/RequreMentionList.add_item(str(true))
 		Ret=$Main/IO/OutputList.get_item_text($Main/IO/OutputList.get_item_count()-1)
@@ -119,12 +177,18 @@ func On_Message(txt,id):
 
 var LastResult
 func _process(delta):
+	if Input.is_action_just_pressed("ui_accept"):
+		if $Console.visible:
+			$Console.hide()
+		else:
+			$Console.popup()
+		pass
 	Settings["Token"]=$Settings.Token
 	Settings["Uri"]=$Settings.Uri
 	Settings["BotName"]=$Settings.BotName
 	Settings["OwnerName"]=$Settings.OwnerName
+	Settings["localOnly"]=!$Settings.Federating
 	if $Settings.Live:
-		Settings["localOnly"]=!$Settings.Federating
 		var res = $ApiWrapper.Result()
 		match res:
 			1:
@@ -148,3 +212,8 @@ func ReturnNewResponse(set:bool,RequreMention:bool,text:String,index:int):
 func _on_OutputList_item_selected(index):
 	$NewResponseDialog.POP(self,index,$Main/IO/InputList.get_item_text(index))
 
+func _on_Sensitivity_value_changed(value):
+	$Main/PercentDisplay.text=str( float($Main/X/Sensitivity.value)/float(100000) )
+	$Main/PercentDisplay.text+=":"
+	$Main/PercentDisplay.text+=str( float($Main/X/Bias.value)/float(100000) )
+	saveSettings()
