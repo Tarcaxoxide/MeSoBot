@@ -119,7 +119,5 @@ func ReturnNewResponse(set:bool,text:String,index:int):
 	SaveResponses()
 
 func _on_OutputList_item_selected(index):
-	$NewResponseDialog.callbackref["Self"]=self
-	$NewResponseDialog.callbackref["Index"]=index
-	$NewResponseDialog.popup()
-	
+	$NewResponseDialog.POP(self,index,$IO/InputList.get_item_text(index))
+
