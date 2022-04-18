@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/Settings.gd" type="Script" id=1]
 
 [node name="Settings" type="Popup"]
-visible = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -45,15 +44,6 @@ margin_bottom = 116.0
 size_flags_horizontal = 11
 size_flags_vertical = 11
 text = "Federating"
-align = 2
-
-[node name="Scooping" type="CheckButton" parent="List/Switches"]
-margin_left = 685.0
-margin_right = 1024.0
-margin_bottom = 116.0
-size_flags_horizontal = 11
-size_flags_vertical = 11
-text = "Scooping"
 align = 2
 
 [node name="Token" type="HBoxContainer" parent="List"]

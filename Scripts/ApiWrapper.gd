@@ -4,7 +4,6 @@ export var API_DATA:Dictionary = {
 	"Settings":{
 			"Uri":"",
 			"Token":"",
-			"visibility":"public",
 			"localOnly":false,
 			"BotName":"",
 			"OwnerName":""
@@ -27,7 +26,7 @@ func Generate_body(param:Dictionary) -> Dictionary:
 		'CreateNote':
 			req_body={
 				"text":param["text"],
-				"visibility":Settings["visibility"],
+				"visibility":"public",
 				"cw":null,
 				"localOnly":Settings["localOnly"],
 				"replyId":null,
@@ -45,7 +44,7 @@ func Generate_body(param:Dictionary) -> Dictionary:
 		'CreateReplyNote':
 			req_body={
 				"text":param["text"],
-				"visibility":Settings["visibility"],
+				"visibility":"public",
 				"cw":null,
 				"localOnly":Settings["localOnly"],
 				"replyId":param["id"],

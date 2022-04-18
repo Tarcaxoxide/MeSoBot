@@ -6,7 +6,6 @@ export var BotName:String
 export var OwnerName:String
 export var Live:bool
 export var Federating:bool
-export var Scooping:bool
 var ivisible=false
 var Settings_Path = "user://Settings.cfg"
 var config = ConfigFile.new()
@@ -36,7 +35,6 @@ func _process(delta):
 	OwnerName = $List/OwnerName/Value.text
 	Live = $List/Switches/Live.pressed
 	Federating = $List/Switches/Federating.pressed
-	Scooping =  $List/Switches/Scooping.pressed
 	if Input.is_action_just_pressed("ui_cancel"):
 		if ivisible:
 			hide()
