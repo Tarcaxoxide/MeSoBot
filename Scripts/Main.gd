@@ -92,7 +92,14 @@ func On_Message(txt,id):
 		var msg=brainFunc(pargs)
 		$ApiWrapper.R_Reply(msg,id)
 	elif($Settings.Scooping):
-		brainFunc(args)
+		for arg in args:
+			var tag=false
+			for ar in arg:
+				if(ar == '@'):
+					tag=true
+			if(!tag):
+				pargs.append(arg)
+		brainFunc(pargs)
 
 var LastResult
 func _process(delta):
