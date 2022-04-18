@@ -70,12 +70,13 @@ func brainFunc(msg:Array,Mentioned:bool) -> String:
 	msz=msz.to_lower()
 	for Schar in SpecialCharz:
 		msz=msz.replace(Schar,"")
-	
+	#Check
 	var index=-1
 	for Item in BrainBag:
+		#TODO:: Implement bag of words.
 		if(Item["Element"] == msz):
 			index=Item["Number"] #number being it's id/index
-	
+	#Respend
 	if(index == -1):
 		print("adding item:",msz)
 		$Main/IO/InputList.add_item(msz,null,false)
@@ -84,7 +85,6 @@ func brainFunc(msg:Array,Mentioned:bool) -> String:
 		Ret=$Main/IO/OutputList.get_item_text($Main/IO/OutputList.get_item_count()-1)
 		SaveResponses()
 	Ret=$Main/IO/OutputList.get_item_text(index)
-	
 	if Ret != str("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!"):
 		for Schar in SpecialCharz:
 			Ret=Ret.replace(Schar,"")
