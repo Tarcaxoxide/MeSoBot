@@ -44,7 +44,10 @@ func _ready():
 	$IO/InputList.add_item("null",null,false)
 	loadResponses()
 
-func brainFunc(msg:Array) -> String:
+func brainFunc(msg:Array,Mentioned:bool) -> String:
+	if msg == [msg[0],msg[0]]:
+		msg=[msg[0]]
+	print("?",msg)
 	var BrainBag = Bagify($IO/InputList.items)
 	var Ret=""
 	var msz=""
@@ -58,6 +61,7 @@ func brainFunc(msg:Array) -> String:
 	msz=msz.to_lower()
 	for Schar in SpecialCharz:
 		msz=msz.replace(Schar,"")
+	
 	var index=-1
 	for Item in BrainBag:
 		if(Item["Element"] == msz):
@@ -66,16 +70,17 @@ func brainFunc(msg:Array) -> String:
 	if(index == -1):
 		print("adding item:",msz)
 		$IO/InputList.add_item(msz,null,false)
-		$IO/OutputList.add_item("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!",null,true)
+		$IO/OutputList.add_item("null",null,true)
 		Ret=$IO/OutputList.get_item_text($IO/OutputList.get_item_count()-1)
 		SaveResponses()
-	else:
-		Ret=$IO/OutputList.get_item_text(index)
+	Ret=$IO/OutputList.get_item_text(index)
 	
 	if Ret != str("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!"):
 		for Schar in SpecialCharz:
 			Ret=Ret.replace(Schar,"")
-	return Ret.to_lower()
+	if Mentioned:
+		return Ret.to_lower()
+	return str("null")
 
 
 func On_Message(txt,id):
@@ -88,18 +93,19 @@ func On_Message(txt,id):
 			pargs.append(arg)
 		if(arg == '@'+Settings["BotName"] or arg == '@'+Settings["BotName"]+'@'+Settings["Uri"]):
 			isMentioned=true
-	if(isMentioned):
-		var msg=brainFunc(pargs)
+	
+	for arg in args:
+		var tag=false
+		for ar in arg:
+			if(ar == '@'):
+				tag=true
+		if(!tag):
+			pargs.append(arg)
+	
+	var msg=brainFunc(pargs,isMentioned)
+	if msg != "null":
 		$ApiWrapper.R_Reply(msg,id)
-	elif($Settings.Scooping):
-		for arg in args:
-			var tag=false
-			for ar in arg:
-				if(ar == '@'):
-					tag=true
-			if(!tag):
-				pargs.append(arg)
-		brainFunc(pargs)
+	
 
 var LastResult
 func _process(delta):
