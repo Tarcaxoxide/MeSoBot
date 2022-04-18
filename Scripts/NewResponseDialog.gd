@@ -6,7 +6,7 @@ export var callbackref:Dictionary={
 }
 
 func _on_CancelButton_pressed():
-	callbackref["Self"].ReturnNewResponse(false,$VBoxContainer/LineEdit.text,callbackref["Index"])
+	callbackref["Self"].ReturnNewResponse(false,true,$VBoxContainer/LineEdit.text,callbackref["Index"])
 	$VBoxContainer/LineEdit.text=""
 	hide()
 
@@ -20,6 +20,7 @@ func POP(Self,Index,RespondingTo):
 
 
 func _on_SubmitButton_pressed():
-	callbackref["Self"].ReturnNewResponse(true,$VBoxContainer/LineEdit.text,callbackref["Index"])
+	callbackref["Self"].ReturnNewResponse(true,$VBoxContainer/RequreMention.pressed,$VBoxContainer/LineEdit.text,callbackref["Index"])
 	$VBoxContainer/LineEdit.text=""
+	$VBoxContainer/RequreMention.pressed=true
 	hide()

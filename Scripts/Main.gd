@@ -23,32 +23,41 @@ func loadResponses():
 		var re = config.get_value("In",str(i))
 		if re == null:
 			break
-		$IO/InputList.add_item(re,null,false)
+		$Main/IO/InputList.add_item(re,null,false)
 	for i in range(1,999999999999999999):
 		var re = config.get_value("Out",str(i))
 		if re == null:
 			break
-		$IO/OutputList.add_item(re,null,true)
+		$Main/IO/OutputList.add_item(re,null,true)
+	for i in range(1,999999999999999999):
+		var re = config.get_value("RequireMention",str(i))
+		if re == null:
+			break
+		$Main/IO/RequreMentionList.add_item(re,null,true)
 
 func SaveResponses():
-	var InBag = Bagify($IO/InputList.items)
-	var OutBag = Bagify($IO/OutputList.items)
+	var InBag = Bagify($Main/IO/InputList.items)
+	var OutBag = Bagify($Main/IO/OutputList.items)
+	var RequireBag = Bagify($Main/IO/RequreMentionList.items)
 	for item in InBag:
 		config.set_value("In",str(item["Number"]),item["Element"])
 	for item in OutBag:
 		config.set_value("Out",str(item["Number"]),item["Element"])
+	for item in RequireBag:
+		config.set_value("RequireMention",str(item["Number"]),item["Element"])
 	config.save(Responses_Path)
 
 func _ready():
-	$IO/OutputList.add_item("null",null,true)
-	$IO/InputList.add_item("null",null,false)
+	$Main/IO/OutputList.add_item("null",null,true)
+	$Main/IO/InputList.add_item("null",null,false)
+	$Main/IO/RequreMentionList.add_item("null",null,false)
 	loadResponses()
 
 func brainFunc(msg:Array,Mentioned:bool) -> String:
 	if msg == [msg[0],msg[0]]:
 		msg=[msg[0]]
 	print("?",msg)
-	var BrainBag = Bagify($IO/InputList.items)
+	var BrainBag = Bagify($Main/IO/InputList.items)
 	var Ret=""
 	var msz=""
 	var last=""
@@ -69,16 +78,17 @@ func brainFunc(msg:Array,Mentioned:bool) -> String:
 	
 	if(index == -1):
 		print("adding item:",msz)
-		$IO/InputList.add_item(msz,null,false)
-		$IO/OutputList.add_item("null",null,true)
-		Ret=$IO/OutputList.get_item_text($IO/OutputList.get_item_count()-1)
+		$Main/IO/InputList.add_item(msz,null,false)
+		$Main/IO/OutputList.add_item("null",null,true)
+		$Main/IO/RequreMentionList.add_item(str(true))
+		Ret=$Main/IO/OutputList.get_item_text($Main/IO/OutputList.get_item_count()-1)
 		SaveResponses()
-	Ret=$IO/OutputList.get_item_text(index)
+	Ret=$Main/IO/OutputList.get_item_text(index)
 	
 	if Ret != str("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!"):
 		for Schar in SpecialCharz:
 			Ret=Ret.replace(Schar,"")
-	if Mentioned:
+	if Mentioned or $Main/IO/RequreMentionList.get_item_text(index) == str(false):
 		return Ret.to_lower()
 	return str("null")
 
@@ -127,13 +137,14 @@ func _process(delta):
 						On_Message(str(res[0]["text"]),str(res[0]["id"]))
 						LastResult=str(res[0]["id"])
 
-func ReturnNewResponse(set:bool,text:String,index:int):
+func ReturnNewResponse(set:bool,RequreMention:bool,text:String,index:int):
 	if(index != 0):
 		if(set):
-			$IO/OutputList.set_item_text(index,text)
-	$IO/OutputList.select(0)
+			$Main/IO/OutputList.set_item_text(index,text)
+			$Main/IO/RequreMentionList.set_item_text(index,str(RequreMention))
+	$Main/IO/OutputList.select(0)
 	SaveResponses()
 
 func _on_OutputList_item_selected(index):
-	$NewResponseDialog.POP(self,index,$IO/InputList.get_item_text(index))
+	$NewResponseDialog.POP(self,index,$Main/IO/InputList.get_item_text(index))
 

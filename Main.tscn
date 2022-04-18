@@ -15,23 +15,73 @@ __meta__ = {
 
 [node name="ApiWrapper" parent="." instance=ExtResource( 2 )]
 
-[node name="IO" type="HBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InputList" type="ItemList" parent="IO"]
-margin_right = 510.0
+[node name="Labels" type="HBoxContainer" parent="Main"]
+margin_right = 1024.0
+margin_bottom = 31.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Main/Labels"]
+margin_right = 338.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "
+Input"
+
+[node name="Label2" type="Label" parent="Main/Labels"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "
+Output"
+
+[node name="Label3" type="Label" parent="Main/Labels"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "
+Require Mention"
+
+[node name="IO" type="HBoxContainer" parent="Main"]
+margin_top = 35.0
+margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="OutputList" type="ItemList" parent="IO"]
-margin_left = 514.0
+[node name="InputList" type="ItemList" parent="Main/IO"]
+margin_right = 338.0
+margin_bottom = 565.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="OutputList" type="ItemList" parent="Main/IO"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 565.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RequreMentionList" type="ItemList" parent="Main/IO"]
+margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 565.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -39,6 +89,6 @@ size_flags_vertical = 3
 visible = false
 
 [node name="Settings" parent="." instance=ExtResource( 4 )]
-visible = false
 
-[connection signal="item_selected" from="IO/OutputList" to="." method="_on_OutputList_item_selected"]
+[connection signal="item_selected" from="Main/IO/OutputList" to="." method="_on_OutputList_item_selected"]
+[connection signal="item_selected" from="Main/IO/RequreMentionList" to="." method="_on_OutputList_item_selected"]
