@@ -72,12 +72,14 @@ func brainFunc(msg:Array) -> String:
 	else:
 		Ret=$IO/OutputList.get_item_text(index)
 	
-	for Schar in SpecialCharz:
-		Ret=Ret.replace(Schar,"")
+	if Ret != str("@"+Settings["OwnerName"]+"@"+Settings["Uri"]+" respense needed!"):
+		for Schar in SpecialCharz:
+			Ret=Ret.replace(Schar,"")
 	return Ret.to_lower()
 
 
 func On_Message(txt,id):
+	txt=txt.replace("\n"," ")
 	var args = txt.split(" ",true)
 	var isMentioned=false
 	var pargs = []
@@ -86,10 +88,11 @@ func On_Message(txt,id):
 			pargs.append(arg)
 		if(arg == '@'+Settings["BotName"] or arg == '@'+Settings["BotName"]+'@'+Settings["Uri"]):
 			isMentioned=true
-	
 	if(isMentioned):
 		var msg=brainFunc(pargs)
 		$ApiWrapper.R_Reply(msg,id)
+	elif($Settings.Scooping):
+		brainFunc(args)
 
 var LastResult
 func _process(delta):
