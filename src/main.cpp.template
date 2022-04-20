@@ -116,11 +116,20 @@ namespace PROGRAM_NAME{
                     MSG.Data.id=Iid;
                     if(B_Text_fixed.size() == 0){
                         bool it=false;
+                        std::string its="";
                         for(size_t i=0;i<randomThings.size();i++){
                             if(randomThings[i] == A_Text_fixed)it=true;
                         }
                         if(it)continue;
-                        randomThings.push_back(A_Text_fixed);
+
+                        tb=false;
+                        for(size_t i=0;i<A_Text_fixed.size();i++){
+                            if(B_Text[i] == '@')tb=true;
+                            if(B_Text[i] == ' ')tb=false;
+                            if(!tb)its+=A_Text_fixed[i];
+                        }
+                        std::cout<<"added::"<<its<<std::endl;
+                        randomThings.push_back(its);
                     }
                 }
             }
