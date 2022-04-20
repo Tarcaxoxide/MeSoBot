@@ -1,0 +1,38 @@
+#include<main.hpp>
+#include<Misskey_Wrapper.hpp>
+#include<iostream>
+
+
+namespace PROGRAM_NAME{
+    int main(Arguments_t Arguments){
+
+        Misskey_Wrapper::MisskeyBot_cl Bot("[https://sub.domain.tld]");
+        Misskey_Wrapper::RequestBody_st MSG;
+        MSG.clear();MSG.Data.ApiKey="[API_TOKEN]";
+        
+        std::string old_id;
+        while(true){
+            Bot.notes.global_timeline(MSG);
+            MSG.Data.localOnly=true;
+            bool Do=false;
+            
+            if(MSG.Data.id != old_id){
+                for(size_t i=0;i<MSG.Data.mentions.size();i++){
+                    if(MSG.Data.mentions[i] == "[the bot's user ID]")Do=true;
+                }
+                for(size_t i=0;i<MSG.Data.mentions.size();i++){
+                    if(MSG.Data.userId == "[the bot's user ID]")Do=false;
+                }
+                old_id=MSG.Data.id;
+                MSG.Data.replyId=MSG.Data.id;
+                {
+                    if(Do){
+                        Bot.notes.create(MSG);
+                    }
+                }
+                MSG.clear();
+            }
+        }
+        return 0;
+    }
+};
