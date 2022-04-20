@@ -1,17 +1,20 @@
 #include<main.hpp>
 #include<Misskey_Wrapper.hpp>
 #include<iostream>
+#include <chrono>
+#include <thread>
 
 
 namespace PROGRAM_NAME{
+    using namespace std::chrono_literals;
     int main(Arguments_t Arguments){
-
         Misskey_Wrapper::MisskeyBot_cl Bot("[https://sub.domain.tld]");
         Misskey_Wrapper::RequestBody_st MSG;
         MSG.clear();MSG.Data.ApiKey="[API_TOKEN]";
         
         std::string old_id;
         while(true){
+            std::this_thread::sleep_for(1s);
             Bot.notes.global_timeline(MSG);
             MSG.Data.localOnly=true;
             bool Do=false;
