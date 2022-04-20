@@ -69,6 +69,7 @@ namespace PROGRAM_NAME{
             if(Data.fileIds.size())Ret+=jsonify_array("fileIds",Data.fileIds,true);
             if(Data.replyId != "")Ret+=jsonify_pair("replyId",Data.replyId,true);
             if(Data.renoteId != "")Ret+=jsonify_pair("renoteId",Data.renoteId,true);
+            if(Data.noteId != "")Ret+=jsonify_pair("noteId",Data.noteId,true);
             if(Data.channelId != "")Ret+=jsonify_pair("channelId",Data.channelId,true);
             // add polls
             Ret+=jsonify_pair("withFiles",Data.withFiles,true);
@@ -98,7 +99,10 @@ namespace PROGRAM_NAME{
             Data.limit=1;
             Data.sinceDate=0;
             Data.untilDate=0;
+            Data.tags.clear();
+            Data.mentions_text.clear();
             Data.mentions.clear();
+            Data.noteId="";
         }
         void RequestBody_st::from_string(std::string jsonString){
             Json::Value Jzon;
@@ -111,9 +115,9 @@ namespace PROGRAM_NAME{
                 Data.text=Jzon[0]["text"].asString();
                 Data.cw=Jzon[0]["cw"].asString();
                 Data.userId=Jzon[0]["userId"].asString();
-                // add user
                 Data.replyId=Jzon[0]["replyId"].asString();
                 Data.renoteId=Jzon[0]["renoteId"].asString();
+                Data.noteId=Jzon[0]["noteId"].asString();
                 // add reply
                 // add renote
                 Data.isHidden=Jzon[0]["isHidden"].asBool();
@@ -138,6 +142,18 @@ namespace PROGRAM_NAME{
                 Data.uri=Jzon[0]["uri"].asString();
                 Data.url=Jzon[0]["url"].asString();
                 // add myReaction
+                // User
+                Data.user.id=Jzon[0]["user"]["id"].asString();
+                Data.user.name=Jzon[0]["user"]["name"].asString();
+                Data.user.username=Jzon[0]["user"]["username"].asString();
+                Data.user.host=Jzon[0]["user"]["host"].asString();
+                Data.user.avatarUrl=Jzon[0]["user"]["avatarUrl"].asString();
+                Data.user.isAdmin=Jzon[0]["user"]["isAdmin"].asBool();
+                Data.user.isModerator=Jzon[0]["user"]["isModerator"].asBool();
+                Data.user.isBot=Jzon[0]["user"]["isBot"].asBool();
+                Data.user.isCat=Jzon[0]["user"]["isCat"].asBool();
+                // add emoji
+                Data.user.onlineStatus=Jzon[0]["user"]["onlineStatus"].asString();
             }else{
                 Data.id=Jzon["id"].asString();
                 Data.createdAt=Jzon["createdAt"].asString();
@@ -147,6 +163,7 @@ namespace PROGRAM_NAME{
                 // add user
                 Data.replyId=Jzon["replyId"].asString();
                 Data.renoteId=Jzon["renoteId"].asString();
+                Data.noteId=Jzon["noteId"].asString();
                 // add reply
                 // add renote
                 Data.isHidden=Jzon["isHidden"].asBool();
@@ -157,6 +174,7 @@ namespace PROGRAM_NAME{
                 // add visibleUserIds
                 // add fileIds
                 // add files
+                
                 for(int i=0;i<Jzon["tags"].size();i++){
                     Data.tags.push_back(Jzon["tags"][i].asString());
                 }
@@ -172,11 +190,33 @@ namespace PROGRAM_NAME{
                 Data.url=Jzon["url"].asString();
                 // add myReaction
             }
+                {//Mentions in text
+                    bool trig=false;
+                    std::string Mention="";
+                    for(size_t i=0;i<Data.text.size();i++){
+                        if(Data.text[i] == '@'){trig=true;}
+                        if(Data.text[i] == ' '){
+                            trig=false;
+                            if(Mention.size() > 1){
+                                Data.mentions_text.push_back(Mention);
+                                Mention="";
+                            }
+                        }
+                        if(trig)Mention+=Data.text[i];
+                    }
+                }//Mentions in text
         }
     };
     namespace Misskey_Wrapper{
-        MisskeyBot_cl::MisskeyBot_cl(std::string url){
-            Rest.SetUrl(url);
+        MisskeyBot_cl::MisskeyBot_cl(std::string uri,std::string BotName,std::string userId){
+            bool trig=false;
+            for(size_t i=1;i<uri.size();i++){
+                if(trig)BotUrl+=uri[i];
+                if( uri[i] == '/' && uri[i-1] == '/' )trig=true;
+            }
+            this->BotName=BotName;
+            BotId=userId;
+            Rest.SetUrl(uri);
             Rest.SetHeader("Content_Type: application/json");
             notes.init(&Rest);
         }
@@ -193,6 +233,15 @@ namespace PROGRAM_NAME{
             Request.from_string(Rest.Post("/api/ping",Request.to_string()));
         }
         
+
+        bool MisskeyBot_cl::operator==(std::string mention){
+            if(mention == std::string("@")+BotName)return true;
+            if(mention == std::string("@")+BotName+std::string("@")+BotUrl)return true;
+            return false;
+        }
+        std::string MisskeyBot_cl::Id(){
+            return BotId;
+        }
     };
 };
 

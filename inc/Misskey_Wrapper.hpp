@@ -17,19 +17,11 @@ namespace PROGRAM_NAME{
         
 
         struct RequestBody_st{
-            struct choices_tt{};
-            struct user_tt{};
-            struct file_tt{};
-            struct poll_tt{
+            struct Data{
                 std::deque<choices_tt> choices;
                 bool multiple;
                 int64_t expiresAt;
                 int64_t expiredAfter;
-            };
-            struct channel_tt{};
-            struct emoji_tt{};
-            struct reaction_tt{};
-            struct Data{
                 std::string ApiKey;
                 std::string visibility;
                 std::deque<std::string> visibleUserIds;
@@ -39,12 +31,20 @@ namespace PROGRAM_NAME{
                 bool noExtractMentions;
                 bool noExtractHashtags;
                 bool noExtractEmojis;
+                bool isAdmin;
+                bool isModerator;
+                bool isBot;
+                bool isCat;
                 std::deque<std::string> fileIds;
                 //std::deque<std::string> mediaIds; //deprecated
+                // "avatarBlurhash": null,
+                // "avatarColor": null,
                 std::string replyId;
                 std::string renoteId;
+                std::string noteId;
                 std::string channelId;
-                poll_tt poll;
+                std::string onlineStatus
+                Data poll;
                 bool withFiles;
                 int64_t limit;
                 std::string sinceId;
@@ -52,22 +52,27 @@ namespace PROGRAM_NAME{
                 int64_t sinceDate;
                 int64_t untilDate;
                 std::string id;
+                std::string name;
+                std::string host;
+                std::string username;
                 std::string createdAt;
                 std::string userId;
-                user_tt user;
+                std::string avatarUrl;
+                Data user;
                 std::deque<Data> reply;
                 std::deque<Data> renote;
                 bool isHidden;
                 std::deque<std::string> mentions;
-                std::deque<file_tt> files;
+                std::deque<std::string> mentions_text;
+                std::deque<Data> files;
                 std::deque<std::string> tags;
-                channel_tt channel;
-                std::deque<emoji_tt> emojis;
-                reaction_tt reactions;
+                Data channel;
+                std::deque<Data> emojis;
+                Data reactions;
                 int64_t renoteCount;
                 int64_t repliesCount;
                 std::string uri,url;
-                reaction_tt myReaction;
+                Data myReaction;
                 std::string message;
                 std::string code;
             }Data;
@@ -80,8 +85,11 @@ namespace PROGRAM_NAME{
 
         class MisskeyBot_cl{
             Network::REST_cl Rest;
+            std::string BotName;
+            std::string BotUrl;
+            std::string BotId;
             public:
-            MisskeyBot_cl(std::string uri);
+            MisskeyBot_cl(std::string uri,std::string BotName,std::string userId);
             struct notes{
                 Network::REST_cl* Rest;
                 void init(Network::REST_cl* r);
@@ -89,7 +97,8 @@ namespace PROGRAM_NAME{
                 void global_timeline(RequestBody_st &Request);
             }notes;
             void ping(RequestBody_st &Request);
-            
+            bool operator==(std::string mention);
+            std::string Id();
         };
     };
 };

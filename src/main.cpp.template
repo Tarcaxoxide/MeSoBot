@@ -6,36 +6,49 @@
 
 
 namespace PROGRAM_NAME{
+
     using namespace std::chrono_literals;
     int main(Arguments_t Arguments){
-        Misskey_Wrapper::MisskeyBot_cl Bot("[https://sub.domain.tld]");
+        Misskey_Wrapper::MisskeyBot_cl Bot("https://sub.domain.tld","Acct","ID");
         Misskey_Wrapper::RequestBody_st MSG;
-        MSG.clear();MSG.Data.ApiKey="[API_TOKEN]";
+        MSG.clear();MSG.Data.ApiKey="API_TOKEN";
+        
+        
+        std::deque<Misskey_Wrapper::key_pair> ResponseMatrix;
         
         std::string old_id;
         while(true){
             std::this_thread::sleep_for(1s);
             Bot.notes.global_timeline(MSG);
-            MSG.Data.localOnly=true;
-            bool Do=false;
+            
             
             if(MSG.Data.id != old_id){
-                for(size_t i=0;i<MSG.Data.mentions.size();i++){
-                    if(MSG.Data.mentions[i] == "[the bot's user ID]")Do=true;
-                }
-                for(size_t i=0;i<MSG.Data.mentions.size();i++){
-                    if(MSG.Data.userId == "[the bot's user ID]")Do=false;
-                }
-                old_id=MSG.Data.id;
-                MSG.Data.replyId=MSG.Data.id;
-                {
-                    if(Do){
-                        Bot.notes.create(MSG);
+                std::string mention="";
+                bool trig=false;
+                for(size_t i=0;i<MSG.Data.mentions_text.size();i++){
+                    mention=MSG.Data.mentions_text[i];
+                    if(mention.size() > 1 ){
+                        if(Bot == mention && MSG.Data.userId != Bot.Id()){
+                            MSG.Data.replyId=MSG.Data.id;
+                            Bot.notes.create(MSG);
+                        }else{
+                            if(MSG.Data.replyId != ""){
+                                trig=false
+                                for(size_t i=0;i<ResponseMatrix.size();i++){
+                                    if()
+                                }
+                            }
+                        }
                     }
                 }
+            }
+
+            { // end of message sets
+                old_id=MSG.Data.id;
                 MSG.clear();
             }
         }
+        
         return 0;
     }
 };
