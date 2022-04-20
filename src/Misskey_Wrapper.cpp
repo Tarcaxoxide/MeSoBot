@@ -229,6 +229,9 @@ namespace PROGRAM_NAME{
         void MisskeyBot_cl::notes::global_timeline(RequestBody_st &Request){
             Request.from_string(Rest->Post("/api/notes/global-timeline",Request.to_string()));
         }
+        void MisskeyBot_cl::notes::show(RequestBody_st &Request){
+            Request.from_string(Rest->Post("/api/notes/show",Request.to_string()));
+        }
         void MisskeyBot_cl::ping(RequestBody_st &Request){
             Request.from_string(Rest.Post("/api/ping",Request.to_string()));
         }

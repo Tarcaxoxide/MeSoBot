@@ -3,42 +3,124 @@
 #include<iostream>
 #include <chrono>
 #include <thread>
-
+#include <cctype>
+#include <stdlib.h>
+#include <time.h>
 
 namespace PROGRAM_NAME{
-
     using namespace std::chrono_literals;
+    std::deque<Misskey_Wrapper::key_pair> ResponseMatrix;
+
+    std::deque<std::string> randomThings;
+
+    std::string to_lower(std::string &target){
+        for(size_t a=0;a<target.size();a++){
+            unsigned char Char=target[a];
+            target[a]=(char)std::tolower(Char);
+        }
+        return target;
+    }
+
+    void learn(std::string A,std::string B){
+        if(A.size() < 1)return;
+        if(B.size() < 1)return;
+        to_lower(A);
+        to_lower(B);
+        for(size_t i=0;i<ResponseMatrix.size();i++){
+            if(A == ResponseMatrix[i].Key)return;
+        }
+        ResponseMatrix.push_back({A,B});
+        std::cout<<" /Learned\\ "<< "["<<A<<":"<<B<<"]"<<std::endl;
+    }
+
     int main(Arguments_t Arguments){
+        srand (time(NULL));
         Misskey_Wrapper::MisskeyBot_cl Bot("https://sub.domain.tld","Acct","ID");
         Misskey_Wrapper::RequestBody_st MSG;
         MSG.clear();MSG.Data.ApiKey="API_TOKEN";
         
+
+        ResponseMatrix.push_back({"hello","hi"});
+        ResponseMatrix.push_back({"hi","hello"});
         
-        std::deque<Misskey_Wrapper::key_pair> ResponseMatrix;
-        
-        std::string old_id;
+        std::string old_id,old_text;
         while(true){
-            std::this_thread::sleep_for(1s);
+            std::this_thread::sleep_for(500ms);
             Bot.notes.global_timeline(MSG);
             
             
             if(MSG.Data.id != old_id){
                 std::string mention="";
-                bool trig=false;
-                for(size_t i=0;i<MSG.Data.mentions_text.size();i++){
-                    mention=MSG.Data.mentions_text[i];
-                    if(mention.size() > 1 ){
+                std::string A_Text="",B_Text="";
+                {// Handle the normal replies
+                    for(size_t i=0;i<MSG.Data.mentions_text.size();i++){
+                        mention=MSG.Data.mentions_text[i];
                         if(Bot == mention && MSG.Data.userId != Bot.Id()){
-                            MSG.Data.replyId=MSG.Data.id;
-                            Bot.notes.create(MSG);
-                        }else{
-                            if(MSG.Data.replyId != ""){
-                                trig=false
-                                for(size_t i=0;i<ResponseMatrix.size();i++){
-                                    if()
+                            
+                            for(size_t a=mention.size()+1;a<MSG.Data.text.size();a++){
+                                A_Text+=MSG.Data.text[a];
+                            }
+                            if(MSG.Data.replyId.size() > 1){
+                                MSG.Data.noteId=MSG.Data.replyId;
+                                Bot.notes.show(MSG);
+                                for(size_t a=mention.size()+1;a<MSG.Data.text.size();a++){
+                                    B_Text+=MSG.Data.text[a];
                                 }
+                            }else{
+                                B_Text=A_Text;
+                            }
+                            to_lower(A_Text);
+                            to_lower(B_Text);
+                            Misskey_Wrapper::key_pair TestPair={A_Text,"\0"};
+                            for(size_t i=0;i<ResponseMatrix.size();i++){
+                                if(ResponseMatrix[i].Key == TestPair.Key)TestPair.Value=ResponseMatrix[i].Value;
+                            }
+                            if(TestPair.Key.size() > 0 && TestPair.Value != "\0" ){
+                                MSG.Data.replyId=MSG.Data.id;
+                                MSG.Data.text=TestPair.Value;
+                                Bot.notes.create(MSG);
+                            }else{
+                                size_t ra;
+                                ra = rand() % randomThings.size();
+                                MSG.Data.replyId=MSG.Data.id;
+                                MSG.Data.text=randomThings[ra];
+                                Bot.notes.create(MSG);
                             }
                         }
+                    }
+                }// Handle the normal replies
+                if(A_Text == "" && B_Text == "" && MSG.Data.userId != Bot.Id()){
+                    std::string Iid=MSG.Data.id;
+                    A_Text=MSG.Data.text;
+                    if(MSG.Data.replyId.size() > 1){
+                        MSG.Data.noteId=MSG.Data.replyId;
+                        Bot.notes.show(MSG);
+                        B_Text+=MSG.Data.text;
+                    }
+                    std::string B_Text_fixed,A_Text_fixed;
+                    to_lower(B_Text);
+                    to_lower(A_Text);
+                    bool tb=false;
+                    for(size_t i=0;i<B_Text.size();i++){
+                        if(B_Text[i] == '@')tb=true;
+                        if(B_Text[i] == ' ')tb=false;
+                        if(!tb)B_Text_fixed+=B_Text[i];
+                    }
+                    tb=false;
+                    for(size_t i=0;i<A_Text.size();i++){
+                        if(B_Text[i] == '@')tb=true;
+                        if(B_Text[i] == ' ')tb=false;
+                        if(!tb)A_Text_fixed+=A_Text[i];
+                    }
+                    learn(B_Text_fixed,A_Text_fixed);
+                    MSG.Data.id=Iid;
+                    if(B_Text_fixed.size() == 0){
+                        bool it=false;
+                        for(size_t i=0;i<randomThings.size();i++){
+                            if(randomThings[i] == A_Text_fixed)it=true;
+                        }
+                        if(it)continue;
+                        randomThings.push_back(A_Text_fixed);
                     }
                 }
             }
