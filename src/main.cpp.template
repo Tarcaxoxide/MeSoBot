@@ -123,11 +123,8 @@ namespace PROGRAM_NAME{
                         }
                         if(it)continue;
 
-                        tb=false;
                         for(size_t i=0;i<A_Text_fixed.size();i++){
-                            if(B_Text[i] == ' ')tb=false;
-                            if(B_Text[i] == '@')tb=true;
-                            if(!tb)its+=A_Text_fixed[i];
+                            if(B_Text[i] != '@'){its+=A_Text_fixed[i];}
                         }
                         std::cout<<"added::"<<its<<std::endl;
                         randomThings.push_back(its);
