@@ -4,8 +4,8 @@
 #include <chrono>
 #include <thread>
 #include <cctype>
-#include <stdlib.h>
-#include <time.h>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 namespace PROGRAM_NAME{
     using namespace std::chrono_literals;
@@ -32,6 +32,9 @@ namespace PROGRAM_NAME{
         ResponseMatrix.push_back({A,B});
         std::cout<<" /Learned\\ "<< "["<<A<<":"<<B<<"]"<<std::endl;
     }
+    
+    size_t saySomethingRandomTriggerTimer=0;
+    size_t saySomethingRandomTrigger=100;
 
     int main(Arguments_t Arguments){
         srand (time(NULL));
@@ -47,8 +50,6 @@ namespace PROGRAM_NAME{
         while(true){
             std::this_thread::sleep_for(500ms);
             Bot.notes.global_timeline(MSG);
-            
-            
             if(MSG.Data.id != old_id){
                 std::string mention="";
                 std::string A_Text="",B_Text="";
@@ -124,8 +125,8 @@ namespace PROGRAM_NAME{
 
                         tb=false;
                         for(size_t i=0;i<A_Text_fixed.size();i++){
-                            if(B_Text[i] == '@')tb=true;
                             if(B_Text[i] == ' ')tb=false;
+                            if(B_Text[i] == '@')tb=true;
                             if(!tb)its+=A_Text_fixed[i];
                         }
                         std::cout<<"added::"<<its<<std::endl;
@@ -137,6 +138,16 @@ namespace PROGRAM_NAME{
             { // end of message sets
                 old_id=MSG.Data.id;
                 MSG.clear();
+            }
+            saySomethingRandomTriggerTimer++;
+            if(saySomethingRandomTriggerTimer >= saySomethingRandomTrigger){
+                saySomethingRandomTriggerTimer=0;
+                size_t ra;
+                ra = rand() % randomThings.size();
+                MSG.Data.text=randomThings[ra];
+                MSG.Data.cw="something random";
+                std::cout<<"####"<<MSG.Data.text<<std::endl;
+                Bot.notes.create(MSG);
             }
         }
         
