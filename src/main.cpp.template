@@ -6,6 +6,8 @@
 #include <cctype>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <tools.hpp>
+#include<LangaugeProcessing.hpp>
 
 namespace PROGRAM_NAME{
     using namespace std::chrono_literals;
@@ -13,13 +15,6 @@ namespace PROGRAM_NAME{
 
     std::deque<std::string> randomThings;
 
-    std::string to_lower(std::string &target){
-        for(size_t a=0;a<target.size();a++){
-            unsigned char Char=target[a];
-            target[a]=(char)std::tolower(Char);
-        }
-        return target;
-    }
 
     void learn(std::string A,std::string B){
         if(A.size() < 1)return;
@@ -30,23 +25,26 @@ namespace PROGRAM_NAME{
             if(A == ResponseMatrix[i].Key)return;
         }
         ResponseMatrix.push_back({A,B});
-        std::cout<<" /Learned\\ "<< "["<<A<<":"<<B<<"]"<<std::endl;
+        std::cout<<" /Learned\\ "<< "[\n"<< A<<":"<<B <<"\n]"<<std::endl;
     }
     
     size_t saySomethingRandomTriggerTimer=0;
-    size_t saySomethingRandomTrigger=100;
+    size_t saySomethingRandomTrigger=500;
 
     int main(Arguments_t Arguments){
         srand (time(NULL));
         Misskey_Wrapper::MisskeyBot_cl Bot("https://sub.domain.tld","Acct","ID");
         Misskey_Wrapper::RequestBody_st MSG;
-        MSG.clear();MSG.Data.ApiKey="API_TOKEN";
+        MSG.clear();MSG.Data.ApiKey="API_Token";
         
 
         ResponseMatrix.push_back({"hello","hi"});
-        ResponseMatrix.push_back({"hi","hello"});
         
         std::string old_id,old_text;
+
+        Sentence_st SC_Average("hello hi");
+
+        int64_t average_sim=0;
         while(true){
             std::this_thread::sleep_for(500ms);
             Bot.notes.global_timeline(MSG);
@@ -81,10 +79,12 @@ namespace PROGRAM_NAME{
                                 MSG.Data.text=TestPair.Value;
                                 Bot.notes.create(MSG);
                             }else{
-                                size_t ra;
-                                ra = rand() % randomThings.size();
+                                //size_t ra;
+                                //ra = rand() % randomThings.size();
+                                MSG.Data.noteId=MSG.Data.id;
+                                Bot.notes.show(MSG);
                                 MSG.Data.replyId=MSG.Data.id;
-                                MSG.Data.text=randomThings[ra];
+                                MSG.Data.text=SC_Average.Random();
                                 Bot.notes.create(MSG);
                             }
                         }
@@ -118,8 +118,17 @@ namespace PROGRAM_NAME{
                     if(B_Text_fixed.size() == 0){
                         bool it=false;
                         std::string its="";
+                        std::string similar_text="";
+                        unsigned int similar_amount=0;
                         for(size_t i=0;i<randomThings.size();i++){
                             if(randomThings[i] == A_Text_fixed)it=true;
+                            Sentence_st SC_A(randomThings[i]);
+                            Sentence_st SC_B(A_Text_fixed);
+                            unsigned int sim=(SC_A == SC_B);
+                            if(sim > similar_amount){
+                                similar_text=SC_A.to_string();
+                                similar_amount=sim;
+                            }
                         }
                         if(it)continue;
 
@@ -129,7 +138,10 @@ namespace PROGRAM_NAME{
                             if(A_Text_fixed[i] == ' ')itz=false;
                             if(!itz){its+=A_Text_fixed[i];}
                         }
-                        std::cout<<"added::"<<its<<std::endl;
+                        if(its.size() < 2)continue;
+                        std::cout<<"added:"<< randomThings.size() << "[\n"<<its<<"\n]"<<std::endl;
+                        SC_Average.AddSentence(its);
+                        
                         randomThings.push_back(its);
                     }
                 }
@@ -142,12 +154,15 @@ namespace PROGRAM_NAME{
             saySomethingRandomTriggerTimer++;
             if(saySomethingRandomTriggerTimer >= saySomethingRandomTrigger){
                 saySomethingRandomTriggerTimer=0;
-                size_t ra;
-                ra = rand() % randomThings.size();
-                MSG.Data.text=randomThings[ra];
-                MSG.Data.cw="something random";
-                std::cout<<"####"<<MSG.Data.text<<std::endl;
+                //size_t ra;
+                //ra = rand() % randomThings.size();
+                size_t ra = rand() % 25;
+                MSG.Data.replyId=MSG.Data.id;
+                std::string Said=SC_Average.Random(ra);
+                MSG.Data.text=Said;
+                MSG.Data.cw=std::string("something random:");
                 Bot.notes.create(MSG);
+                std::cout<<" /RandomPost\\ "<< "[\n"<<Said<<"\n]"<<std::endl;
             }
         }
         
