@@ -16,11 +16,13 @@ namespace PROGRAM_NAME{
         if(new_string[new_string.size()-1] != ' ')new_string+=' ';
         std::string buffer="";
         for(size_t i=0;i<new_string.size();i++){
-            if(new_string[i] == ' '){
-                add(buffer);
-                buffer="";
-            }else{
-                buffer+=new_string[i];
+            if(new_string[i] != '\n'){
+                if(new_string[i] == ' '){
+                    add(buffer);
+                    buffer="";
+                }else{
+                    buffer+=new_string[i];
+                }
             }
         }
     }
@@ -32,7 +34,7 @@ namespace PROGRAM_NAME{
         return buffer;
     }
     int64_t Sentence_st::findWordAmount(std::string target){
-        if(target == "\0")return 0;
+        if(target == " ")return 0;
         for(size_t i=0;i<words.size();i++){
             if(words[i].word == target)return words[i].amount;
         }
@@ -49,7 +51,12 @@ namespace PROGRAM_NAME{
         for(size_t i=0;i<MaxSize;i++){
             std::string OtherWord=other.findWordString(i);
             std::string MyWord=findWordString(i);
+            int64_t OtherAmount=other.findWordAmount(OtherWord);
+            int64_t MyAmount=findWordAmount(OtherWord);
             buffer+=(OtherWord != MyWord);
+            if(OtherWord == MyWord){
+                buffer+=(OtherAmount != MyAmount);
+            }
         }
         double dec_buffer=buffer;
         double dec_result=1-(dec_buffer/MaxSize);
