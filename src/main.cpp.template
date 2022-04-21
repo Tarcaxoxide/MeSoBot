@@ -79,12 +79,11 @@ namespace PROGRAM_NAME{
                                 MSG.Data.text=TestPair.Value;
                                 Bot.notes.create(MSG);
                             }else{
-                                //size_t ra;
-                                //ra = rand() % randomThings.size();
+                                size_t ra = (rand() % 2999)+1;
                                 MSG.Data.noteId=MSG.Data.id;
                                 Bot.notes.show(MSG);
                                 MSG.Data.replyId=MSG.Data.id;
-                                MSG.Data.text=SC_Average.Random();
+                                MSG.Data.text=SC_Average.Random(ra);
                                 Bot.notes.create(MSG);
                             }
                         }
@@ -116,22 +115,7 @@ namespace PROGRAM_NAME{
                     learn(B_Text_fixed,A_Text_fixed);
                     MSG.Data.id=Iid;
                     if(B_Text_fixed.size() == 0){
-                        bool it=false;
                         std::string its="";
-                        std::string similar_text="";
-                        unsigned int similar_amount=0;
-                        for(size_t i=0;i<randomThings.size();i++){
-                            if(randomThings[i] == A_Text_fixed)it=true;
-                            Sentence_st SC_A(randomThings[i]);
-                            Sentence_st SC_B(A_Text_fixed);
-                            unsigned int sim=(SC_A == SC_B);
-                            if(sim > similar_amount){
-                                similar_text=SC_A.to_string();
-                                similar_amount=sim;
-                            }
-                        }
-                        if(it)continue;
-
                         bool itz=false;
                         for(size_t i=0;i<A_Text_fixed.size();i++){
                             if(A_Text_fixed[i] == '@')itz=true;
@@ -139,10 +123,9 @@ namespace PROGRAM_NAME{
                             if(!itz){its+=A_Text_fixed[i];}
                         }
                         if(its.size() < 2)continue;
-                        std::cout<<"added:"<< randomThings.size() << "[\n"<<its<<"\n]"<<std::endl;
+                        std::cout<<"added:" << "[\n"<<its<<"\n]"<<std::endl;
                         SC_Average.AddSentence(its);
                         
-                        randomThings.push_back(its);
                     }
                 }
             }
@@ -152,11 +135,12 @@ namespace PROGRAM_NAME{
                 MSG.clear();
             }
             saySomethingRandomTriggerTimer++;
+            if(!(saySomethingRandomTriggerTimer%10)){
+                std::cout<<"T-"<<(saySomethingRandomTrigger-saySomethingRandomTriggerTimer)<<std::endl;
+            }
             if(saySomethingRandomTriggerTimer >= saySomethingRandomTrigger){
                 saySomethingRandomTriggerTimer=0;
-                //size_t ra;
-                //ra = rand() % randomThings.size();
-                size_t ra = rand() % 25;
+                size_t ra = (rand() % 2999)+1;
                 MSG.Data.replyId=MSG.Data.id;
                 std::string Said=SC_Average.Random(ra);
                 MSG.Data.text=Said;

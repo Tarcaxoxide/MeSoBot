@@ -66,30 +66,28 @@ namespace PROGRAM_NAME{
         if(index > words.size()-1)return " ";
         return words[index].word;
     }
-    std::string Sentence_st::Random(size_t WordCount){
+    std::string Sentence_st::Random(size_t SentenceSize){
         std::string buffer="",NextWord="",PreviewsWord="";
         size_t oldIndex=0;
-        for(size_t a=0;a<WordCount;a++){
-            bool hasNot=true;
-            size_t ra = rand() % words.size();
-            size_t X=0;
-            while(hasNot){
-                ra = rand() % words.size();
-                for(size_t z=0;z<words[oldIndex].next_words.size();z++){
-                    if(findWordString(ra) == words[oldIndex].next_words[z].word){
-                        hasNot=false;
-                        if(words[oldIndex].next_words[z].likelihood > X){
-                            NextWord=words[oldIndex].next_words[z].word;
-                            X=words[oldIndex].next_words[z].likelihood;
-                            std::cout<<"?"<<PreviewsWord<<":"<<X<<":"<<NextWord<<"?"<<std::endl;
-                        }
-                    }
-                }
-                if(oldIndex == 0)hasNot=false;
-                oldIndex=ra;
+        for(size_t a=0;(buffer.size()+NextWord.size()+1)<SentenceSize;a++){
+            if(a != 0){
+                PreviewsWord=NextWord;
+                buffer+=NextWord+std::string(" ");
             }
-            PreviewsWord=NextWord;
-            buffer+=NextWord+std::string(" ");
+
+
+            //ra = rand() % words.size();
+            struct wordPat{std::string word;size_t Index;};
+            std::deque<wordPat> rList;
+            for(size_t z=0;z<words[oldIndex].next_words.size();z++){
+                for(size_t x=0;x<words[oldIndex].next_words[z].likelihood;x++){
+                    rList.push_back({words[oldIndex].next_words[z].word,z});
+                }
+            }
+            size_t ra = rand() % rList.size();
+            std::cout<<"?"<<(rList.size()-1)<<":"<<ra<<std::endl;
+            NextWord=rList[ra].word;
+            oldIndex=rList[ra].Index;
         }
         
         return buffer;
@@ -109,6 +107,7 @@ namespace PROGRAM_NAME{
             }
         }
         double dec_buffer=buffer;
+        if(dec_buffer == 0)return 0;
         double dec_result=1-(dec_buffer/MaxSize);
         unsigned int whole_result=(unsigned int)(dec_result*100);
         return whole_result;

@@ -23,7 +23,7 @@ namespace PROGRAM_NAME{
         std::string to_string();
         int64_t findWordAmount(std::string target);
         std::string findWordString(size_t index);
-        std::string Random(size_t WordCount=10);
+        std::string Random(size_t SentenceSize);
         unsigned int operator==(Sentence_st &other);
     };
 };
