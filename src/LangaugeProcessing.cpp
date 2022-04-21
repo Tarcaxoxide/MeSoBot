@@ -84,10 +84,15 @@ namespace PROGRAM_NAME{
                     rList.push_back({words[oldIndex].next_words[z].word,z});
                 }
             }
-            size_t ra = rand() % rList.size();
-            std::cout<<"?"<<(rList.size()-1)<<":"<<ra<<std::endl;
-            NextWord=rList[ra].word;
-            oldIndex=rList[ra].Index;
+
+            if(rList.size()){
+                size_t ra = rand() % rList.size();
+                std::cout<<"?2?"<<std::endl;
+                NextWord=rList[ra].word;
+                oldIndex=rList[ra].Index;
+            }else{
+                break;
+            }
         }
         
         return buffer;
@@ -107,9 +112,13 @@ namespace PROGRAM_NAME{
             }
         }
         double dec_buffer=buffer;
-        if(dec_buffer == 0)return 0;
-        double dec_result=1-(dec_buffer/MaxSize);
+        double dec_result;
+        if(dec_buffer != 0){
+            dec_result=1-(dec_buffer/MaxSize);
+        }else{
+            dec_result=1;
+        }
         unsigned int whole_result=(unsigned int)(dec_result*100);
-        return whole_result;
+        return whole_result-1;
     }
 };
