@@ -87,7 +87,6 @@ namespace PROGRAM_NAME{
 
             if(rList.size()){
                 size_t ra = rand() % rList.size();
-                std::cout<<"?2?"<<std::endl;
                 NextWord=rList[ra].word;
                 oldIndex=rList[ra].Index;
             }else{
