@@ -5,6 +5,10 @@
 
 namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
+
+        if(((unsigned int)target_word[target_word.size()-1]) > 255)return;
+        if(((unsigned int)next_word[next_word.size()-1]) > 255)return;
+
         size_t target_index=0;
         for(size_t a=0;a<words.size();a++){
             if(words[a].word == target_word)target_index=a+1;
@@ -29,7 +33,7 @@ namespace PROGRAM_NAME{
             double _A=(words[target_index-1].next_words[a].count+0.00000000000000001)/words[target_index-1].next_words.size();
             double _B=_A;
             double _C=words[target_index-1].next_words.size()*_B;
-            words[target_index-1].next_words[a].likelihood=(size_t)(int)_C;
+            words[target_index-1].next_words[a].likelihood=((size_t)(int)_C)%11;
         }
         
     }

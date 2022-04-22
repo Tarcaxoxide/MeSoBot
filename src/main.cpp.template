@@ -32,7 +32,7 @@ namespace PROGRAM_NAME{
     size_t saySomethingRandomTriggerTimer=0;
     size_t saySomethingRandomTrigger=500;
     size_t minsaySomethingRandomTrigger=100;
-    size_t maxsaySomethingRandomTrigger=1000;
+    size_t maxsaySomethingRandomTrigger=10000;
 
     int main(Arguments_t Arguments){
         srand (time(NULL));
@@ -45,11 +45,11 @@ namespace PROGRAM_NAME{
         
         std::string old_id,old_text;
 
-        Sentence_st SC_Average("hello hi");
+        Sentence_st SC_Average("hello");
 
         int64_t average_sim=0;
         while(true){
-            std::this_thread::sleep_for(500ms);
+            std::this_thread::sleep_for(100ms);
             Bot.notes.global_timeline(MSG);
             if(MSG.Data.id != old_id){
                 std::string mention="";
