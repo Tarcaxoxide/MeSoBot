@@ -34,7 +34,7 @@ namespace PROGRAM_NAME{
             double _A=(words[target_index-1].next_words[a].count+0.00000000000000001)/words[target_index-1].next_words.size();
             double _B=_A;
             double _C=words[target_index-1].next_words.size()*_B;
-            words[target_index-1].next_words[a].likelihood=((size_t)(int)_C)%26; // 10 cap
+            words[target_index-1].next_words[a].likelihood=((size_t)(int)_C)%101; // 100 cap
         }
         
     }
