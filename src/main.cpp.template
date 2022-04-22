@@ -64,11 +64,13 @@ namespace PROGRAM_NAME{
                                 A_Text+=MSG.Data.text[a];
                             }
                             if(MSG.Data.replyId.size() > 1){
+                                std::string Restore=MSG.Data.id;
                                 MSG.Data.noteId=MSG.Data.replyId;
                                 Bot.notes.show(MSG);
                                 for(size_t a=mention.size()+1;a<MSG.Data.text.size();a++){
                                     B_Text+=MSG.Data.text[a];
                                 }
+                                MSG.Data.id=Restore;
                             }else{
                                 B_Text=A_Text;
                             }
