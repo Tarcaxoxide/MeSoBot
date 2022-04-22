@@ -2,13 +2,14 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <tools.hpp>
+#include <fstream>
 
 namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
 
         if(((unsigned int)target_word[target_word.size()-1]) > 255)return;
         if(((unsigned int)next_word[next_word.size()-1]) > 255)return;
-
+        
         size_t target_index=0;
         for(size_t a=0;a<words.size();a++){
             if(words[a].word == target_word)target_index=a+1;
@@ -33,13 +34,14 @@ namespace PROGRAM_NAME{
             double _A=(words[target_index-1].next_words[a].count+0.00000000000000001)/words[target_index-1].next_words.size();
             double _B=_A;
             double _C=words[target_index-1].next_words.size()*_B;
-            words[target_index-1].next_words[a].likelihood=((size_t)(int)_C)%11;
+            words[target_index-1].next_words[a].likelihood=((size_t)(int)_C)%26; // 10 cap
         }
         
     }
     Sentence_st::Sentence_st(std::string new_string){
         AddSentence(new_string);
     }
+    
     void Sentence_st::AddSentence(std::string new_string){
         if(new_string[new_string.size()-1] != ' ')new_string+=' ';
         std::string buffer="";
@@ -53,18 +55,26 @@ namespace PROGRAM_NAME{
                     add(oldBuffer,buffer);
                     
                     oldBuffer=buffer;
+                    //oRawFile<<oldBuffer;
                     buffer="";
                 }else{
                     buffer+=new_string[i];
                 }
+            }
+            bool haz=false;
+            for(size_t i=0;i<RawLines.size();i++){
+                if(RawLines[i] == new_string)haz=true;
+            }
+            if(!haz){
+                RawLines.push_back(new_string);
             }
         }
         add(oldBuffer,"\b");
     }
     std::string Sentence_st::to_string(){
         std::string buffer="";
-        for(size_t i=0;i<words.size();i++){
-            buffer+=words[i].word+std::string(" ");
+        for(size_t i=0;i<RawLines.size();i++){
+            buffer+=RawLines[i]+"\n";
         }
         return buffer;
     }

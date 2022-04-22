@@ -10,10 +10,22 @@ namespace PROGRAM_NAME{
         return target;
     }
 
-    void GenerateGraph(Sentence_st &SC){
-        std::ofstream File("Graph.html");
+    void Load_Save(Sentence_st &SC,bool load){
+        
+        std::ifstream iRawFile("Raw.txt");
+        std::string line;
+        for(;!iRawFile.eof();std::getline(iRawFile,line)){
+            SC.AddSentence(line);
+        }
+        iRawFile.close();
+
+
+        std::ofstream oGraphFile("Graph.html");
         std::string graph = SC.Graph();
-        File << graph << std::endl;
-        File.close();
+        oGraphFile << graph << std::endl;
+        oGraphFile.close();
+        std::ofstream oRawFile("Raw.txt");
+        oRawFile<<SC.to_string();
+        oRawFile.close();
     }
 };

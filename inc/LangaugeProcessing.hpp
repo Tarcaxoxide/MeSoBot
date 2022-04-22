@@ -18,6 +18,7 @@ namespace PROGRAM_NAME{
             int64_t count;
         };
         std::deque<word_st> words; // the words in the sentence.
+        std::deque<std::string> RawLines;
 
         void add(std::string target_word,std::string next_word="");
         Sentence_st(std::string new_string);

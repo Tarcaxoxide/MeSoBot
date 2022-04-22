@@ -46,6 +46,7 @@ namespace PROGRAM_NAME{
         std::string old_id,old_text;
 
         Sentence_st SC_Average("hello");
+        Load_Save(SC_Average);
 
         int64_t average_sim=0;
         while(true){
@@ -125,7 +126,7 @@ namespace PROGRAM_NAME{
                         if(its.size() < 2)continue;
                         std::cout<<"added:" << "[\n"<<its<<"\n]"<<std::endl;
                         SC_Average.AddSentence(its);
-                        GenerateGraph(SC_Average);
+                        Load_Save(SC_Average);
                     }
                 }
             }

@@ -7,5 +7,5 @@
 
 namespace PROGRAM_NAME{
     std::string to_lower(std::string &target);
-    void GenerateGraph(Sentence_st &SC);
+    void Load_Save(Sentence_st &SC,bool load=false);
 };
