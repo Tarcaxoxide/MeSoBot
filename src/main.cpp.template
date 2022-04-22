@@ -124,7 +124,6 @@ namespace PROGRAM_NAME{
                             if(!itz){its+=A_Text_fixed[i];}
                         }
                         if(its.size() < 2)continue;
-                        std::cout<<"added:" << "[\n"<<its<<"\n]"<<std::endl;
                         SC_Average.AddSentence(its);
                         Load_Save(SC_Average);
                     }
