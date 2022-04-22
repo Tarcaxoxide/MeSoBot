@@ -1,8 +1,9 @@
+#pragma once
 #include<PROGRAM_NAME.HPP>
 #include<string>
 #include<deque>
 #include<iostream>
-#include <tools.hpp>
+
 
 namespace PROGRAM_NAME{
     struct Sentence_st{
@@ -12,7 +13,7 @@ namespace PROGRAM_NAME{
         };
         struct word_st{
             std::string word;
-            int64_t amount;
+            int64_t amount; // i don't think i use this anywhere.
             std::deque<next_word_st> next_words;
         };
         std::deque<word_st> words; // the words in the sentence.
@@ -23,7 +24,9 @@ namespace PROGRAM_NAME{
         std::string to_string();
         int64_t findWordAmount(std::string target);
         std::string findWordString(size_t index);
+        std::string Random(std::deque<std::string> &rList);
         std::string Random(size_t SentenceSize);
         unsigned int operator==(Sentence_st &other);
+        std::string Graph();
     };
 };

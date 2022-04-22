@@ -1,6 +1,7 @@
 #include<LangaugeProcessing.hpp>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <tools.hpp>
 
 namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
@@ -36,17 +37,20 @@ namespace PROGRAM_NAME{
         if(new_string[new_string.size()-1] != ' ')new_string+=' ';
         std::string buffer="";
         std::string oldBuffer="";
+        bool firstWord=true;
         for(size_t i=0;i<new_string.size();i++){
             if(new_string[i] != '\n'){
                 if(new_string[i] == ' '){
-                    add(oldBuffer,buffer);
+                    if(oldBuffer.size() && buffer.size() || firstWord)add(oldBuffer,buffer);
                     oldBuffer=buffer;
                     buffer="";
+                    firstWord=false;
                 }else{
                     buffer+=new_string[i];
                 }
             }
         }
+        add(oldBuffer,"\b");
     }
     std::string Sentence_st::to_string(){
         std::string buffer="";
@@ -66,31 +70,44 @@ namespace PROGRAM_NAME{
         if(index > words.size()-1)return " ";
         return words[index].word;
     }
+    std::string Sentence_st::Random(std::deque<std::string> &rList){
+        std::string result;
+        if(rList.size() < 1)return "\b";
+        size_t rn = rand() % rList.size();
+        result=rList[rn];
+        return result;
+    }
     std::string Sentence_st::Random(size_t SentenceSize){
         std::string buffer="",NextWord="",PreviewsWord="";
         size_t oldIndex=0;
         for(size_t a=0;(buffer.size()+NextWord.size()+1)<SentenceSize;a++){
-            if(a != 0){
+            if(a){
+                if(NextWord == "\b")break;
                 PreviewsWord=NextWord;
                 buffer+=NextWord+std::string(" ");
             }
-
-
-            //ra = rand() % words.size();
-            struct wordPat{std::string word;size_t Index;};
-            std::deque<wordPat> rList;
-            for(size_t z=0;z<words[oldIndex].next_words.size();z++){
-                for(size_t x=0;x<words[oldIndex].next_words[z].likelihood;x++){
-                    rList.push_back({words[oldIndex].next_words[z].word,z});
+            if(buffer == ""){
+                std::deque<std::string> rList;
+                for(size_t a=0;a<words[0].next_words.size();a++){
+                    for(size_t b=0;b<words[0].next_words[a].likelihood;b++){
+                        rList.push_back(words[0].next_words[a].word);
+                    }
                 }
-            }
-
-            if(rList.size()){
-                size_t ra = rand() % rList.size();
-                NextWord=rList[ra].word;
-                oldIndex=rList[ra].Index;
+                NextWord=Random(rList);
             }else{
-                break;
+                size_t this_index=0;
+                for(size_t a=0;a<words.size();a++){
+                    if(words[a].word == PreviewsWord)this_index=a+1;
+                }
+                if(this_index){
+                    std::deque<std::string> rList;
+                    for(size_t a=0;a<words[this_index-1].next_words.size();a++){
+                        for(size_t b=0;b<words[this_index-1].next_words[a].likelihood;b++){
+                            rList.push_back(words[this_index-1].next_words[a].word);
+                        }
+                    }
+                    NextWord=Random(rList);
+                }
             }
         }
         
@@ -119,5 +136,28 @@ namespace PROGRAM_NAME{
         }
         unsigned int whole_result=(unsigned int)(dec_result*100);
         return whole_result-1;
+    }
+    std::string Sentence_st::Graph(){
+        std::string results="";
+        results+=std::string("<ul>");
+        for(size_t a=0;a<words.size();a++){
+            results+=std::string("\t<li>'")+words[a].word+std::string("'\n");
+            results+=std::string("\t\t<ul>");
+            for(size_t b=0;b<words[a].next_words.size();b++){
+                if(words[a].next_words[b].word != "\b"){
+                    if(words[a].next_words[b].word.size()){
+                        results+=std::string("\t\t\t<li>")+std::to_string(words[a].next_words[b].likelihood)+std::string(":'")+words[a].next_words[b].word+std::string("'</li>\n");
+                    }else{
+                        std::cout<<"?string of size 0"<<std::endl;
+                    }
+                }else{
+                    results+=std::string("\t\t\t<li>")+std::to_string(words[a].next_words[b].likelihood)+std::string(":'\\b")+std::string("'</li>\n");
+                }
+            }
+            results+=std::string("\t\t</ul>\n");
+            results+=std::string("\t</li>\n");
+        }
+        results+=std::string("</ul>");
+        return results;
     }
 };

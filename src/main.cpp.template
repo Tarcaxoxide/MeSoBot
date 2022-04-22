@@ -1,19 +1,18 @@
-#include<main.hpp>
-#include<Misskey_Wrapper.hpp>
-#include<iostream>
+#include <main.hpp>
+#include <Misskey_Wrapper.hpp>
+#include <iostream>
 #include <chrono>
 #include <thread>
 #include <cctype>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <tools.hpp>
-#include<LangaugeProcessing.hpp>
+#include <LangaugeProcessing.hpp>
+
 
 namespace PROGRAM_NAME{
     using namespace std::chrono_literals;
     std::deque<Misskey_Wrapper::key_pair> ResponseMatrix;
-
-    std::deque<std::string> randomThings;
 
 
     void learn(std::string A,std::string B){
@@ -27,6 +26,8 @@ namespace PROGRAM_NAME{
         ResponseMatrix.push_back({A,B});
         std::cout<<" /Learned\\ "<< "[\n"<< A<<":"<<B <<"\n]"<<std::endl;
     }
+
+    
     
     size_t saySomethingRandomTriggerTimer=0;
     size_t saySomethingRandomTrigger=500;
@@ -79,11 +80,8 @@ namespace PROGRAM_NAME{
                                 MSG.Data.text=TestPair.Value;
                                 Bot.notes.create(MSG);
                             }else{
-                                size_t ra = (rand() % 2999)+1;
-                                MSG.Data.noteId=MSG.Data.id;
-                                Bot.notes.show(MSG);
                                 MSG.Data.replyId=MSG.Data.id;
-                                MSG.Data.text=SC_Average.Random(ra);
+                                MSG.Data.text=SC_Average.Random(3000);
                                 Bot.notes.create(MSG);
                             }
                         }
@@ -125,7 +123,7 @@ namespace PROGRAM_NAME{
                         if(its.size() < 2)continue;
                         std::cout<<"added:" << "[\n"<<its<<"\n]"<<std::endl;
                         SC_Average.AddSentence(its);
-                        
+                        GenerateGraph(SC_Average);
                     }
                 }
             }
@@ -140,13 +138,13 @@ namespace PROGRAM_NAME{
             }
             if(saySomethingRandomTriggerTimer >= saySomethingRandomTrigger){
                 saySomethingRandomTriggerTimer=0;
-                size_t ra = (rand() % 2999)+1;
                 MSG.Data.replyId=MSG.Data.id;
-                std::string Said=SC_Average.Random(ra);
+                std::string Said=SC_Average.Random(3000);
                 MSG.Data.text=Said;
                 MSG.Data.cw=std::string("something random:");
                 Bot.notes.create(MSG);
                 std::cout<<" /RandomPost\\ "<< "[\n"<<Said<<"\n]"<<std::endl;
+                
             }
         }
         
