@@ -9,11 +9,13 @@ namespace PROGRAM_NAME{
     struct Sentence_st{
         struct next_word_st{
             std::string word;
+            int64_t count;
             int64_t likelihood;
         };
         struct word_st{
             std::string word;
             std::deque<next_word_st> next_words;
+            int64_t count;
         };
         std::deque<word_st> words; // the words in the sentence.
 

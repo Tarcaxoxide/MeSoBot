@@ -5,37 +5,33 @@
 
 namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
-        size_t hasWord=0;
-        if(target_word.size() < 1)return;
-
-        for(size_t i=0;i<target_word.size();i++){
-            if(((unsigned int)target_word[i]) >= 256)return;
+        size_t target_index=0;
+        for(size_t a=0;a<words.size();a++){
+            if(words[a].word == target_word)target_index=a+1;
         }
-
-        for(size_t i=0;i<words.size();i++){
-            if(words[i].word == target_word)hasWord=i+1; 
+        if(target_index == 0){
+            words.push_back({target_word,{},1});
+            target_index=words.size();
+        }{
+            words[target_index-1].count++;
         }
-        next_word_st NextWord;
-        if(next_word.size()){
-            NextWord={next_word,1};
+        if(next_word.size() < 1)return;
+        size_t next_index=0;
+        for(size_t a=0;a<words[target_index-1].next_words.size();a++){
+            if(words[target_index-1].next_words[a].word == next_word)next_index=a+1;
+        }
+        if(next_index == 0){
+            words[target_index-1].next_words.push_back({next_word,1,1});
         }else{
-            NextWord={next_word,0};// 0% likely , aka not possible.
+            words[target_index-1].next_words[next_index-1].count++;
         }
-        if(hasWord == 0){
-            words.push_back({target_word,{NextWord}});
-        }else{
-            size_t hasNextWord=0;
-            for(size_t i=0;i<words[hasWord-1].next_words.size();i++){
-                if(words[hasWord-1].next_words[i].word == next_word)hasNextWord=i+1;
-            }
-            if(hasNextWord == 0){
-                if(NextWord.likelihood == 0)return;
-                words[hasWord-1].next_words.push_back(NextWord);
-            }else{
-                words[hasWord-1].next_words[hasNextWord-1].likelihood++;
-                if(words[hasWord-1].next_words[hasNextWord-1].likelihood > words[hasWord-1].next_words.size())words[hasWord-1].next_words[hasNextWord-1].likelihood=words[hasWord-1].next_words.size();
-            }
+        for(size_t a=0;a<words[target_index-1].next_words.size();a++){
+            double _A=(words[target_index-1].next_words[a].count+0.00000000000000001)/words[target_index-1].next_words.size();
+            double _B=_A;
+            double _C=words[target_index-1].next_words.size()*_B;
+            words[target_index-1].next_words[a].likelihood=(size_t)(int)_C;
         }
+        
     }
     Sentence_st::Sentence_st(std::string new_string){
         AddSentence(new_string);
@@ -44,23 +40,17 @@ namespace PROGRAM_NAME{
         if(new_string[new_string.size()-1] != ' ')new_string+=' ';
         std::string buffer="";
         std::string oldBuffer="";
-        bool first=true;
         for(size_t i=0;i<new_string.size();i++){
-            if(buffer.size() < 1)buffer="\b";
             if(new_string[i] != '\n'){
                 if(new_string[i] == ' '){
-                    if(oldBuffer.size() < 1 && !first){
-                        add(buffer,oldBuffer);
-                    }else if(first){
-                        add("[Start of Sentence]",buffer);
-                    }else if(buffer.size() > 1){
-                        add(oldBuffer,buffer);
+                    if(oldBuffer == ""){
+                        oldBuffer="[Start of sentence]";
                     }
+                    add(oldBuffer,buffer);
+                    
                     oldBuffer=buffer;
                     buffer="";
-                    first=false;
                 }else{
-                    if(buffer == "\b")buffer="";
                     buffer+=new_string[i];
                 }
             }
@@ -110,7 +100,7 @@ namespace PROGRAM_NAME{
                 if(this_index){
                     std::deque<std::string> rList;
                     for(size_t a=0;a<words[this_index-1].next_words.size();a++){
-                        for(size_t b=0;b<words[this_index-1].next_words[a].likelihood;b++){
+                        for(size_t b=0;b<words[0].next_words[a].likelihood;b++){
                             rList.push_back(words[this_index-1].next_words[a].word);
                         }
                     }
@@ -127,7 +117,7 @@ namespace PROGRAM_NAME{
         std::string results="";
         results+=std::string("<ul>");
         for(size_t a=0;a<words.size();a++){
-            results+=std::string("\t<li>'")+words[a].word+std::string("'\n");
+            results+=std::string("\t<li>")+std::string(":'")+words[a].word+std::string("'\n");
             results+=std::string("\t\t<ul>");
             for(size_t b=0;b<words[a].next_words.size();b++){
                 if(words[a].next_words[b].word != "\b"){
