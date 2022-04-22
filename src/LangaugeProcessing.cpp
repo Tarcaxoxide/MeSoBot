@@ -7,6 +7,11 @@ namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
         size_t hasWord=0;
         if(target_word.size() < 1)return;
+
+        for(size_t i=0;i<target_word.size();i++){
+            if(((unsigned int)target_word[i]) >= 256)return;
+        }
+
         for(size_t i=0;i<words.size();i++){
             if(words[i].word == target_word)hasWord=i+1; 
         }
