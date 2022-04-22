@@ -31,6 +31,8 @@ namespace PROGRAM_NAME{
     
     size_t saySomethingRandomTriggerTimer=0;
     size_t saySomethingRandomTrigger=500;
+    size_t minsaySomethingRandomTrigger=100;
+    size_t maxsaySomethingRandomTrigger=1000;
 
     int main(Arguments_t Arguments){
         srand (time(NULL));
@@ -39,7 +41,7 @@ namespace PROGRAM_NAME{
         MSG.clear();MSG.Data.ApiKey="API_Token";
         
 
-        ResponseMatrix.push_back({"hello","hi"});
+        saySomethingRandomTrigger=(rand() % maxsaySomethingRandomTrigger)+minsaySomethingRandomTrigger;
         
         std::string old_id,old_text;
 
@@ -137,6 +139,7 @@ namespace PROGRAM_NAME{
                 std::cout<<"T-"<<(saySomethingRandomTrigger-saySomethingRandomTriggerTimer)<<std::endl;
             }
             if(saySomethingRandomTriggerTimer >= saySomethingRandomTrigger){
+                saySomethingRandomTrigger=(rand() % maxsaySomethingRandomTrigger)+minsaySomethingRandomTrigger;
                 saySomethingRandomTriggerTimer=0;
                 MSG.Data.replyId=MSG.Data.id;
                 std::string Said=SC_Average.Random(3000);
