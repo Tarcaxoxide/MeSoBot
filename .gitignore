@@ -1,4 +1,4 @@
-src/main.cpp
 build/*
 Graph.html
 Raw.txt
+inc/Credentials.hpp

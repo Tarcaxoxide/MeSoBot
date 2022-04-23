@@ -36,7 +36,28 @@ namespace PROGRAM_NAME{
             double _C=words[target_index-1].next_words.size()*_B;
             words[target_index-1].next_words[a].likelihood=1+(((size_t)(int)_C)%100); // 100 cap
         }
-        
+        // Add words to flat word bank.
+        if(target_word != "[Start of sentence]"){
+            size_t has=0;
+            for(size_t i=0;i<wordBank.size();i++){
+                if(wordBank[i].word == target_word)has=i+1;
+            }
+            if(has){
+                wordBank[has-1].count++;
+            }else{
+                wordBank.push_back({target_word,1});
+            }
+        }else{
+            size_t has=0;
+            for(size_t i=0;i<wordBank.size();i++){
+                if(wordBank[i].word == next_word)has=i+1;
+            }
+            if(has){
+                wordBank[has-1].count++;
+            }else{
+                wordBank.push_back({next_word,1});
+            }
+        }
     }
     Sentence_st::Sentence_st(std::string new_string){
         AddSentence(new_string);
@@ -149,5 +170,40 @@ namespace PROGRAM_NAME{
         }
         results+=std::string("</ul>");
         return results;
+    }
+    double Sentence_st::operator==(Sentence_st &Other){
+        //fill the word lists;
+        std::deque<std::string> OtherWords,MyWords;
+        for(size_t a=0;a<wordBank.size();a++){
+            for(size_t b=0;b<wordBank[a].count;b++){
+                MyWords.push_back(wordBank[a].word);
+            }
+        }
+        for(size_t a=0;a<Other.wordBank.size();a++){
+            for(size_t b=0;b<Other.wordBank[a].count;b++){
+                OtherWords.push_back(Other.wordBank[a].word);
+            }
+        }
+        //ensure the word lists are the same size so we don't get an out of bounds index
+        while(OtherWords.size() < MyWords.size()){
+            OtherWords.push_back(" ");
+        }
+        while(OtherWords.size() > MyWords.size()){
+            MyWords.push_back(" ");
+        }
+        //calculate the differences
+        int64_t Total=0;
+        int64_t Difference=0;
+        for(size_t a=0;a<MyWords.size();a++){
+            Total++;
+            if(MyWords[a] != OtherWords[a])Difference++;
+        }
+        //calculate the similarity
+        double _Difference=Difference+0.00000000000000000000; // convert this stupid int into a double XD
+        double _Total=Total+0.00000000000000000000; // convert this stupid int into a double XD
+        double _Ratio=_Difference/_Total;
+        double _Similarity=1-_Ratio;
+        double Similarity=_Similarity*100;
+        return Similarity;
     }
 };
