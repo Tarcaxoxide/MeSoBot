@@ -22,8 +22,8 @@ namespace PROGRAM_NAME{
 
 
     void learn(std::string A,std::string B){
-        if(A.size() < 1)return;
-        if(B.size() < 1)return;
+        if(A.size() < 2)return;
+        if(B.size() < 2)return;
         to_lower(A);
         to_lower(B);
         Sentence_st _A(A);
@@ -170,7 +170,7 @@ namespace PROGRAM_NAME{
                 MSG.Data.replyId=MSG.Data.id;
                 std::string Said=reply("\\[RANDOM]\\","");
                 MSG.Data.text=Said;
-                MSG.Data.cw=std::string("something random:");
+                //MSG.Data.cw=std::string("something random:");
                 Bot.notes.create(MSG);
                 std::cout<<" /RandomPost\\ "<< "[\n"<<Said<<"\n]"<<std::endl;
                 
