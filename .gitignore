@@ -1,4 +1,4 @@
-build/*
+build
 Graph.html
 Raw.txt
 inc/Credentials.hpp
