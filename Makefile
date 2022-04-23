@@ -4,7 +4,7 @@ Executable = MeSoBot.exe
 
 CC = clang++
 INCDIR=inc
-CFLAGS = -fmax-errors=1 -ljsoncpp -lcurl -I$(INCDIR)
+CFLAGS = -std=c++17 -fmax-errors=1 -ljsoncpp -lcurl -I$(INCDIR)
 
 
 SRCDIR := src
