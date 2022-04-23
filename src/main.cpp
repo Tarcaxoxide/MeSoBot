@@ -173,8 +173,6 @@ namespace PROGRAM_NAME{
                 MSG.Data.cw="";
                 //MSG.Data.cw=std::string("something random:");
                 Bot.notes.create(MSG);
-                std::cout<<" /RandomPost\\ "<< "[\n"<<Said<<"\n]"<<std::endl;
-                
             }
         }
         
