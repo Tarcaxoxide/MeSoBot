@@ -2,7 +2,6 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <tools.hpp>
-#include <fstream>
 
 namespace PROGRAM_NAME{
     void Sentence_st::add(std::string target_word,std::string next_word){
