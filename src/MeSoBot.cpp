@@ -60,13 +60,20 @@ namespace PROGRAM_NAME{
     void MeSoBot_cl::save(){
         std::filesystem::create_directory("Data/");
         std::ofstream Keys("Data/Keys.txt");
+        std::ofstream GKeys("Data/GKeys.html");
         std::ofstream Values("Data/Values.txt");
+        std::ofstream GValues("Data/GValues.html");
         for(size_t a=0;a<ResponseMatrix.size();a++){
             Keys<<ResponseMatrix[a].Key.to_string()<<std::endl;
             Values<<ResponseMatrix[a].Value.to_string()<<std::endl;
+
+            GKeys<<ResponseMatrix[a].Key.Graph()<<std::endl;
+            GValues<<ResponseMatrix[a].Value.Graph()<<std::endl;
         }
         Keys.close();
         Values.close();
+        GKeys.close();
+        GValues.close();
     }
     void MeSoBot_cl::load(){
         std::filesystem::create_directory("Data/");
