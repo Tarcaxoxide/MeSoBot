@@ -3,7 +3,6 @@
 #include <iostream> /* printing to terminal for debugging */
 #include <chrono>
 #include <thread>
-
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <tools.hpp> /* basic tools for string formating */
@@ -79,17 +78,34 @@ namespace PROGRAM_NAME{
                     to_lower(B_Text);
                     to_lower(A_Text);
                     bool tb=false;
-                    for(size_t i=0;i<B_Text.size();i++){
+                    for(int64_t i=0;i<((int64_t)B_Text.size());i++){
                         if(B_Text[i] == '@')tb=true;
                         if(B_Text[i] == ' ')tb=false;
                         if(!tb)B_Text_fixed+=B_Text[i];
                     }
                     tb=false;
-                    for(size_t i=0;i<A_Text.size();i++){
+                    for(int64_t i=0;i<((int64_t)A_Text.size());i++){
                         if(B_Text[i] == '@')tb=true;
                         if(B_Text[i] == ' ')tb=false;
                         if(!tb)A_Text_fixed+=A_Text[i];
                     }
+                    A_Text=A_Text_fixed;A_Text_fixed="";
+                    B_Text=B_Text_fixed;B_Text_fixed="";
+                    tb=false;
+                    for(int64_t i=0;i<((int64_t)A_Text.size())-4;i++){
+                        if(A_Text[i] == 'h' && A_Text[i+1] == 't' && A_Text[i+2] == 't' &&  A_Text[i+3] == 'p' )tb=true;
+                        if(A_Text[i] == ' ')tb=false;
+                        if(!tb)A_Text_fixed+=A_Text[i];
+                    }
+                    tb=false;
+                    for(int64_t i=0;i<((int64_t)B_Text.size())-4;i++){
+                        if(B_Text[i] == 'h' && B_Text[i+1] == 't' && B_Text[i+2] == 't'&&  B_Text[i+3] == 'p' )tb=true;
+                        if(B_Text[i] == ' ')tb=false;
+                        if(!tb)B_Text_fixed+=B_Text[i];
+                    }
+
+
+
                     Bot.learn(B_Text_fixed,A_Text_fixed);
                     Bot.save();
                     MSG.Data.id=Iid;
