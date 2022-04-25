@@ -5,8 +5,10 @@ namespace PROGRAM_NAME{
     void MeSoBot_cl::learn(std::string A,std::string B){
         if(A.size() < 2)return;
         if(B.size() < 2)return;
+        if(A == B)return;
         to_lower(A);
         to_lower(B);
+
         Sentence_st _A(A);
         Sentence_st _B(B);
         size_t has=0;
