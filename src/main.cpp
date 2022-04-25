@@ -91,6 +91,7 @@ namespace PROGRAM_NAME{
                         if(!tb)A_Text_fixed+=A_Text[i];
                     }
                     Bot.learn(B_Text_fixed,A_Text_fixed);
+                    Bot.save();
                     MSG.Data.id=Iid;
                     if(B_Text_fixed.size() == 0){
                         std::string its="";
@@ -102,6 +103,7 @@ namespace PROGRAM_NAME{
                         }
                         if(its.size() < 2)continue;
                         Bot.learn("\\[RANDOM]\\",its);
+                        Bot.save();
                     }
                 }
             }

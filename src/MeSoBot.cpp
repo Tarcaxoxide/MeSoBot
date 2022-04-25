@@ -23,7 +23,6 @@ namespace PROGRAM_NAME{
             std::cout<<"added '"<<A<<"'"<<std::endl;
             std::cout<<"added '"<<B<<"' to '"<<A<<"'"<<std::endl;
         }
-        save();
     }
     std::string MeSoBot_cl::reply(std::string A_Text,std::string B_Text){
         to_lower(A_Text);
@@ -55,38 +54,31 @@ namespace PROGRAM_NAME{
         std::cout<<"replied ["<<Result<<"]"<<std::endl;
         return Result;
     }
-    void  MeSoBot_cl::_save(std::string Set,std::string Key,std::string Value){
-        std::filesystem::create_directory("Data/");
-        std::string FileName=std::string("Data/")+Set+std::string(".")+Key;
-        std::ofstream File(FileName.c_str());
-        File << Value;
-        File.close();
-    }
-    std::string MeSoBot_cl::_load(std::string Set,std::string Key){
-        std::filesystem::create_directory("Data/");
-        std::string FileName=std::string("Data/")+Set+std::string(".")+Key;
-        std::ifstream File(FileName.c_str());
-        std::string Line="",Result="";
-        for(;!File.eof();std::getline(File,Line)){
-            Result+=Line;
-        }
-        File.close();
-        return Result;
-    }
+    
     void MeSoBot_cl::save(){
+        std::filesystem::create_directory("Data/");
+        std::ofstream Keys("Data/Keys.txt");
+        std::ofstream Values("Data/Values.txt");
         for(size_t a=0;a<ResponseMatrix.size();a++){
-            _save("Key",std::to_string(a),ResponseMatrix[a].Key.to_string());
-            _save("Value",std::to_string(a),ResponseMatrix[a].Value.to_string());
+            Keys<<ResponseMatrix[a].Key.to_string()<<std::endl;
+            Values<<ResponseMatrix[a].Value.to_string()<<std::endl;
         }
+        Keys.close();
+        Values.close();
     }
     void MeSoBot_cl::load(){
         std::filesystem::create_directory("Data/");
-        for (const auto & file : std::filesystem::directory_iterator("Data/")){
-            std::string DataIndex = _ParseFileName(file.path());
-            std::string KeyValue = _load("Key",DataIndex);
-            std::string ValueValue = _load("Value",DataIndex);
-            learn(KeyValue,ValueValue);
+        std::ifstream Keys("Data/Keys.txt");
+        std::ifstream Values("Data/Values.txt");
+        for(;!(Values.eof() || Keys.eof());){
+            std::string Line_A;
+            std::getline(Values,Line_A);
+            std::string Line_B;
+            std::getline(Keys,Line_B);
+            learn(Line_B,Line_A);
         }
+        Keys.close();
+        Values.close();
     }
     std::string MeSoBot_cl::_ParseFileName(std::string FileName){
         std::string Result="";

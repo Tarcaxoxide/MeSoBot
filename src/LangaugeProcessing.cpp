@@ -93,8 +93,8 @@ namespace PROGRAM_NAME{
     }
     std::string Sentence_st::to_string(){
         std::string buffer="";
-        for(size_t i=0;i<RawLines.size();i++){
-            buffer+=RawLines[i]+"\n";
+        for(size_t i=0;i<wordBank.size();i++){
+            buffer+=wordBank[i].word+" ";
         }
         return buffer;
     }
